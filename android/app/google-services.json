@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "553136522970",
+    "project_id": "parvaah-fcf5e",
+    "storage_bucket": "parvaah-fcf5e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:553136522970:android:400f6808af1f8fc51cc7e3",
+        "android_client_info": {
+          "package_name": "com.example.parvaah_helping_hand"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD1Ut2mAe16H2OR0HZ99A3PtsiCTfivgy8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

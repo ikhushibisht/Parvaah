@@ -1,0 +1,66 @@
+import 'package:get/get.dart';
+import 'package:liquid_swipe/PageHelpers/LiquidController.dart';
+import 'package:parvaah_helping_hand/src/constants/colors.dart';
+import 'package:parvaah_helping_hand/src/constants/image_string.dart';
+import 'package:parvaah_helping_hand/src/constants/text_string.dart';
+import 'package:parvaah_helping_hand/src/features/authentication/models/model_onbo.dart';
+import 'package:parvaah_helping_hand/src/features/authentication/screens/onbo_screen/onbo_pg_widget.dart';
+import 'package:parvaah_helping_hand/src/features/authentication/screens/welcome/welcome_sc.dart';
+
+class OnBoardingController extends GetxController {
+  final controller = LiquidController();
+  RxInt currentPage = 0.obs;
+
+  final pages = [
+    OnBoardingPageWidget(
+      model: OnBoardingModel(
+        image: tOnBoardingImage1,
+        title: tOnboardingTitle1,
+        subTitle: tOnboardingSubTitle1,
+        counterText: tOnboardingCounter1,
+        bgColor: Get.isDarkMode ? tAccentColor : tOnBoardingPage1,
+      ),
+    ),
+    OnBoardingPageWidget(
+      model: OnBoardingModel(
+        image: tOnBoardingImage2,
+        title: tOnboardingTitle2,
+        subTitle: tOnboardingSubTitle2,
+        counterText: tOnboardingCounter2,
+        bgColor: Get.isDarkMode ? tOnboColor : tOnBoardingPage2,
+      ),
+    ),
+    OnBoardingPageWidget(
+      model: OnBoardingModel(
+        image: tOnBoardingImage3,
+        title: tOnboardingTitle3,
+        subTitle: tOnboardingSubTitle3,
+        counterText: tOnboardingCounter3,
+        bgColor: Get.isDarkMode ? tAccentColor : tOnBoardingPage1,
+      ),
+    ),
+    OnBoardingPageWidget(
+      model: OnBoardingModel(
+        image: tOnBoardingImage4,
+        title: tOnboardingTitle4,
+        subTitle: tOnboardingSubTitle4,
+        counterText: tOnboardingCounter4,
+        bgColor: Get.isDarkMode ? tOnboColor : tOnBoardingPage2,
+      ),
+    ),
+  ];
+
+  void skip() => Get.to(const WelcomeScreen());
+
+  void animateToNextSlide() {
+    int nextPage = controller.currentPage + 1;
+    if (nextPage == 4) {
+      Get.to(const WelcomeScreen());
+    } else {
+      controller.animateToPage(page: nextPage);
+    }
+  }
+
+  onPageChangedCallback(int activePageIndex) =>
+      currentPage.value = activePageIndex;
+}
