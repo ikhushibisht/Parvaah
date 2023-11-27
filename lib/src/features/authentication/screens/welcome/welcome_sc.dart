@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:parvaah_helping_hand/src/constants/colors.dart';
 import 'package:parvaah_helping_hand/src/constants/image_string.dart';
 import 'package:parvaah_helping_hand/src/constants/sizes.dart';
@@ -8,8 +7,15 @@ import 'package:parvaah_helping_hand/src/constants/text_string.dart';
 import 'package:parvaah_helping_hand/src/features/authentication/screens/login/login_screen.dart';
 import 'package:parvaah_helping_hand/src/features/authentication/screens/signup/signup_screen.dart';
 
-class WelcomeScreen extends StatelessWidget {
+class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({Key? key}) : super(key: key);
+
+  @override
+  _WelcomeScreenState createState() => _WelcomeScreenState();
+}
+
+class _WelcomeScreenState extends State<WelcomeScreen> {
+  bool isLoginSelected = true;
 
   @override
   Widget build(BuildContext context) {
@@ -59,17 +65,47 @@ class WelcomeScreen extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: ElevatedButton(
-                    onPressed: () => Get.to(() => const LoginScreen()),
-                    child: Text(tLogin.toUpperCase()),
-                  ),
+                  child: isLoginSelected
+                      ? ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              isLoginSelected = true;
+                            });
+                            Get.to(() => const LoginScreen());
+                          },
+                          child: Text(tLogin.toUpperCase()),
+                        )
+                      : OutlinedButton(
+                          onPressed: () {
+                            setState(() {
+                              isLoginSelected = true;
+                            });
+                            Get.to(() => const LoginScreen());
+                          },
+                          child: Text(tLogin.toUpperCase()),
+                        ),
                 ),
                 const SizedBox(width: 10.0),
                 Expanded(
-                  child: ElevatedButton(
-                    onPressed: () => Get.to(() => const SignUpScreen()),
-                    child: Text(tSignup.toUpperCase()),
-                  ),
+                  child: isLoginSelected
+                      ? OutlinedButton(
+                          onPressed: () {
+                            setState(() {
+                              isLoginSelected = false;
+                            });
+                            Get.to(() => const SignUpScreen());
+                          },
+                          child: Text(tSignup.toUpperCase()),
+                        )
+                      : ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              isLoginSelected = false;
+                            });
+                            Get.to(() => const SignUpScreen());
+                          },
+                          child: Text(tSignup.toUpperCase()),
+                        ),
                 ),
               ],
             )
