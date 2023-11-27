@@ -8,8 +8,8 @@ const tBgColor = Color.fromARGB(255, 228, 181, 242);
 
 const tCardBgColor = Color.fromARGB(255, 255, 242, 177);
 const tWhiteColor = Color(0xffffffff);
-const tDarkColor = Color.fromARGB(230, 104, 206, 150);
-const tThirdColor = Color.fromARGB(255, 237, 203, 247);
+const tDarkColor = Color.fromARGB(230, 60, 157, 104);
+const tThirdColor = Color.fromARGB(255, 252, 242, 255);
 
 // --onboarding
 Color tOnBoardingPage1 = const Color.fromARGB(255, 213, 166, 226);
