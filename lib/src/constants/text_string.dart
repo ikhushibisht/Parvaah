@@ -1,8 +1,8 @@
 const String tLogin = "Login";
 const String tSignup = "Sign Up";
 
-const String tAppName = "PARVAAH \nA Helping Hand";
-const String tAppTagLine = "Building a better tomorrow";
+const String tAppName = "          PARVAAH \nA Helping Hand";
+const String tAppTagLine = "      Building a better tomorrow";
 
 // --onboarding
 const String tOnboardingTitle1 = "VISION";
