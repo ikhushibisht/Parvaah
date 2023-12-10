@@ -32,16 +32,6 @@ class _SplashScreenState extends State<SplashScreen> {
       body: Obx(
         () => Stack(
           children: [
-            // AnimatedPositioned(
-            //   duration: const Duration(milliseconds: 2000),
-            //   top: splashScreenController.animate.value ? 210 : 70,
-            //   left: splashScreenController.animate.value ? 20 : -30,
-            //   child: AnimatedOpacity(
-            //     duration: const Duration(milliseconds: 2400),
-            //     opacity: splashScreenController.animate.value ? 0.80 : 0,
-            //     child: const Image(image: AssetImage(tSplashTopIcon)),
-            //   ),
-            // ),
             AnimatedPositioned(
               duration: const Duration(milliseconds: 1600),
               top: splashScreenController.animate.value ? -50 : 0,
@@ -53,10 +43,9 @@ class _SplashScreenState extends State<SplashScreen> {
                 child: const Image(image: AssetImage(tSplashImage)),
               ),
             ),
-            // ),
             AnimatedPositioned(
               duration: const Duration(milliseconds: 3000),
-              top: 385,
+              top: mediaQuery.size.height * 0.5 - 50, // Adjusted to the center
               left: splashScreenController.animate.value ? tDefaultSize : 0,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -64,20 +53,21 @@ class _SplashScreenState extends State<SplashScreen> {
                   Text(
                     tAppName,
                     style: TextStyle(
-                        fontSize: 40.0,
-                        color: isDarkMode
-                            ? const Color.fromARGB(255, 255, 255, 255)
-                            : tPrimaryColor,
-                        fontWeight: FontWeight.bold),
+                      fontSize: 40.0,
+                      color: isDarkMode
+                          ? const Color.fromARGB(255, 255, 255, 255)
+                          : tPrimaryColor,
+                      fontWeight: FontWeight.bold,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                   Text(
                     tAppTagLine,
                     style: TextStyle(
-                        fontSize: 22.0,
-                        color: isDarkMode ? Colors.yellowAccent : Colors.black,
-                        // fontFamily: '',
-                        fontWeight: FontWeight.bold),
+                      fontSize: 22.0,
+                      color: isDarkMode ? Colors.yellowAccent : Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
                     textAlign: TextAlign.center,
                   )
                 ],
@@ -89,17 +79,3 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 }
-            // AnimatedPositioned(
-            //   duration: const Duration(milliseconds: 3000),
-            //   bottom: splashScreenController.animate.value ? 50 : 0,
-            //   right: tDefaultSize,
-            //   child: AnimatedOpacity(
-            //     duration: const Duration(milliseconds: 2400),
-            //     opacity: splashScreenController.animate.value ? 1 : 0,
-            //     child: Container(
-            //       width: tSplashContainerSize,
-            //       height: tSplashContainerSize,
-            //       decoration: BoxDecoration(
-            //         borderRadius: BorderRadius.circular(100),
-            //         color: tPrimaryColor,
-

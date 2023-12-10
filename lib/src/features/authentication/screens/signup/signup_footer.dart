@@ -17,7 +17,7 @@ class SignUpFooterWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         const Text("OR"),
-        const SizedBox(height: tFormHeight - 45),
+        const SizedBox(height: tFormHeight - 20),
         SizedBox(
           width: double.maxFinite,
           child: OutlinedButton.icon(
@@ -26,13 +26,13 @@ class SignUpFooterWidget extends StatelessWidget {
             label: const Text(tSignInWithGoogle),
           ),
         ),
-        const SizedBox(height: tFormHeight - 50),
+        const SizedBox(height: tFormHeight - 30),
         TextButton(
           onPressed: () => Get.to(() => const LoginScreen()),
           child: Text.rich(
             TextSpan(
                 text: tAlreadyHaveAnAccount,
-                style: Theme.of(context).textTheme.bodyLarge,
+                style: Theme.of(context).textTheme.bodyMedium,
                 children: const [
                   TextSpan(text: tLogin, style: TextStyle(color: Colors.blue))
                 ]),

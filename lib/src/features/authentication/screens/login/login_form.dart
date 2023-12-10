@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/get_navigation.dart';
 import 'package:parvaah_helping_hand/src/constants/sizes.dart';
 import 'package:parvaah_helping_hand/src/constants/text_string.dart';
+import 'package:parvaah_helping_hand/src/features/authentication/screens/dashboard/dashboard.dart';
 import 'package:parvaah_helping_hand/src/features/authentication/screens/forgot_password/forgot_options/forgot_pass_model.dart';
 
 class LoginForm extends StatefulWidget {
@@ -35,7 +38,7 @@ class _LoginFormState extends State<LoginForm> {
 
     return Form(
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: tFormHeight - 30),
+        padding: const EdgeInsets.symmetric(vertical: tFormHeight - 25),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -46,7 +49,7 @@ class _LoginFormState extends State<LoginForm> {
                   hintText: tEmail,
                   border: OutlineInputBorder()),
             ),
-            const SizedBox(height: tFormHeight - 45),
+            const SizedBox(height: tFormHeight - 30),
             TextFormField(
               obscureText: !_isPasswordVisible,
               controller: _passwordController,
@@ -69,7 +72,7 @@ class _LoginFormState extends State<LoginForm> {
                 ),
               ),
             ),
-            const SizedBox(height: tFormHeight - 50),
+            const SizedBox(height: tFormHeight - 30),
             Align(
               alignment: Alignment.centerRight,
               child: TextButton(
@@ -83,9 +86,7 @@ class _LoginFormState extends State<LoginForm> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {
-                  // Access password using _passwordController.text
-                },
+                onPressed: () => Get.to(() => const DashboardScreen()),
                 child: const Text(tLogin),
               ),
             ),

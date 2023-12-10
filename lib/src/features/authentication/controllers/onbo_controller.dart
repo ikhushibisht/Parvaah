@@ -23,7 +23,7 @@ class OnBoardingController extends GetxController {
     ),
     OnBoardingPageWidget(
       model: OnBoardingModel(
-        image: tOnBoardingImage2,
+        image: tOnBoardingImage3,
         title: tOnboardingTitle2,
         subTitle: tOnboardingSubTitle2,
         counterText: tOnboardingCounter2,
@@ -32,20 +32,11 @@ class OnBoardingController extends GetxController {
     ),
     OnBoardingPageWidget(
       model: OnBoardingModel(
-        image: tOnBoardingImage3,
+        image: tOnBoardingImage2,
         title: tOnboardingTitle3,
         subTitle: tOnboardingSubTitle3,
         counterText: tOnboardingCounter3,
-        bgColor: Get.isDarkMode ? tAccentColor : tOnBoardingPage1,
-      ),
-    ),
-    OnBoardingPageWidget(
-      model: OnBoardingModel(
-        image: tOnBoardingImage4,
-        title: tOnboardingTitle4,
-        subTitle: tOnboardingSubTitle4,
-        counterText: tOnboardingCounter4,
-        bgColor: Get.isDarkMode ? tOnboColor : tOnBoardingPage2,
+        bgColor: Get.isDarkMode ? tOnboColor2 : tOnBoardingPage3,
       ),
     ),
   ];
@@ -54,7 +45,7 @@ class OnBoardingController extends GetxController {
 
   void animateToNextSlide() {
     int nextPage = controller.currentPage + 1;
-    if (nextPage == 4) {
+    if (nextPage == 3) {
       Get.to(const WelcomeScreen());
     } else {
       controller.animateToPage(page: nextPage);

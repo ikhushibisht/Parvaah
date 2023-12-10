@@ -7,7 +7,7 @@ class TTextTheme {
     headlineMedium: GoogleFonts.poppins(color: Colors.black87),
   );
   static TextTheme darkTextTheme = TextTheme(
-    headlineLarge: GoogleFonts.montserrat(color: Colors.white70),
-    headlineMedium: GoogleFonts.poppins(color: Colors.white60, fontSize: 24),
+    headlineLarge: GoogleFonts.montserrat(color: Colors.white),
+    headlineMedium: GoogleFonts.poppins(color: Colors.white, fontSize: 24),
   );
 }

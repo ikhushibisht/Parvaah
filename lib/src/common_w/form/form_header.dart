@@ -46,10 +46,8 @@ class FormHeaderWidget extends StatelessWidget {
                 fontWeight: FontWeight.bold)),
         Text(subTitle,
             style: TextStyle(
-                fontSize: 15.0,
-                color: isDarkMode
-                    ? const Color.fromARGB(255, 181, 121, 237)
-                    : Colors.black,
+                fontSize: 16.0,
+                color: isDarkMode ? Colors.yellow : Colors.black,
                 fontWeight: FontWeight.bold)),
       ],
     );

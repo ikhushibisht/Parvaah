@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:parvaah_helping_hand/src/constants/colors.dart';
 
 class ForgotPassBtn extends StatelessWidget {
   const ForgotPassBtn({
@@ -24,8 +23,8 @@ class ForgotPassBtn extends StatelessWidget {
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10.0),
             color: isDarkMode
-                ? const Color.fromARGB(255, 91, 89, 89)
-                : const Color.fromARGB(255, 195, 191, 191)),
+                ? const Color.fromARGB(255, 170, 170, 170)
+                : const Color.fromARGB(255, 177, 136, 254)),
         child: Row(
           children: [
             Icon(btnIcon, size: 40.0),
@@ -34,16 +33,14 @@ class ForgotPassBtn extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(title,
-                    style: TextStyle(
+                    style: const TextStyle(
                         fontSize: 23.0,
-                        color: isDarkMode ? tThirdColor : Colors.black,
+                        color: Colors.black,
                         fontWeight: FontWeight.bold)),
                 Text(subTitle,
-                    style: TextStyle(
+                    style: const TextStyle(
                         fontSize: 15.0,
-                        color: isDarkMode
-                            ? Colors.white
-                            : const Color.fromARGB(255, 56, 56, 56),
+                        color: Color.fromARGB(255, 56, 56, 56),
                         fontWeight: FontWeight.bold)),
               ],
             ),

@@ -9,14 +9,27 @@ import 'package:parvaah_helping_hand/src/features/authentication/screens/login/l
 class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
+  String getBackgroundImage(BuildContext context) {
+    var brightness = MediaQuery.of(context).platformBrightness;
+    return brightness == Brightness.dark
+        ? tDarkModeBackground
+        : tLightModeBackground;
+  }
+
   @override
   Widget build(BuildContext context) {
-    //Get the size in LoginHeaderWidget()
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
           child: Container(
             padding: const EdgeInsets.all(tDefaultSize),
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image:
+                    AssetImage(getBackgroundImage(context)), // Pass the context
+                fit: BoxFit.cover,
+              ),
+            ),
             child: const Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

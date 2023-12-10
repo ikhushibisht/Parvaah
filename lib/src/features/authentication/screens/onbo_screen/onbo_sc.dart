@@ -10,6 +10,9 @@ class OnBoardingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var mediaQuery = MediaQuery.of(context);
+    var brightness = mediaQuery.platformBrightness;
+    final isDarkMode = brightness == Brightness.dark;
     final obController = OnBoardingController();
     return Scaffold(
       body: Stack(
@@ -21,10 +24,10 @@ class OnBoardingScreen extends StatelessWidget {
             liquidController: obController.controller,
             onPageChangeCallback: obController.onPageChangedCallback,
             slideIconWidget: const Icon(Icons.arrow_back_ios),
-            waveType: WaveType.circularReveal,
+            waveType: WaveType.liquidReveal,
           ),
           Positioned(
-            bottom: 60.0,
+            bottom: 37.0,
             child: OutlinedButton(
               onPressed: () => obController.animateToNextSlide(),
               style: ElevatedButton.styleFrom(
@@ -34,16 +37,17 @@ class OnBoardingScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(20),
               ),
               child: Container(
-                padding: const EdgeInsets.all(20.0),
-                decoration: const BoxDecoration(
-                    color: tDarkColor, shape: BoxShape.circle),
-                child: const Icon(Icons.arrow_forward_ios),
+                padding: const EdgeInsets.all(15.0),
+                decoration: BoxDecoration(
+                    color: isDarkMode ? tBgColor : tDarkColor,
+                    shape: BoxShape.circle),
+                child: const Icon(Icons.arrow_forward_ios_sharp),
               ),
             ),
           ),
           Positioned(
-            top: 60,
-            right: 17,
+            top: 40.5,
+            right: 15,
             child: TextButton(
               onPressed: () => obController.skip(),
               child: const Text("Skip", style: TextStyle(color: Colors.white)),
@@ -51,12 +55,12 @@ class OnBoardingScreen extends StatelessWidget {
           ),
           Obx(
             () => Positioned(
-              bottom: 5,
+              bottom: 2,
               child: AnimatedSmoothIndicator(
-                count: 4,
+                count: 3,
                 activeIndex: obController.currentPage.value,
                 effect: const ScrollingDotsEffect(
-                  activeDotColor: Color.fromARGB(255, 117, 116, 116),
+                  activeDotColor: Color.fromARGB(255, 255, 254, 254),
                 ),
               ),
             ),

@@ -12,45 +12,65 @@ class ForgotPasswordPhoneScreen extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
+  String getBackgroundImage(BuildContext context) {
+    var brightness = MediaQuery.of(context).platformBrightness;
+    return brightness == Brightness.dark
+        ? tDarkModeBackground
+        : tLightModeBackground;
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
-          padding: const EdgeInsets.all(tDefaultSize),
-          child: Column(
-            children: [
-              const SizedBox(height: tDefaultSize * 4),
-              FormHeaderWidget(
-                image: tForgotPasswordImage,
-                title: tForgotPassword.toUpperCase(),
-                subTitle: tUsingPhoneNo,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                heightBetween: 30.0,
-                textAlign: TextAlign.center,
+          child: Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage(getBackgroundImage(context)),
+                fit: BoxFit.cover, // Cover the whole screen
               ),
-              const SizedBox(height: tFormHeight),
-              Form(
-                child: Column(
-                  children: [
-                    TextFormField(
-                      decoration: const InputDecoration(
+            ),
+            child: Column(
+              children: [
+                const SizedBox(height: 70),
+                FormHeaderWidget(
+                  image: tForgotPasswordImage,
+                  title: tForgotPassword.toUpperCase(),
+                  subTitle: tUsingPhoneNo,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  heightBetween: 40.0,
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: tFormHeight),
+                Form(
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        decoration: const InputDecoration(
                           label: Text(tPhoneNo),
                           hintText: tPhoneNo,
-                          prefixIcon: Icon(Icons.phone)),
-                    ),
-                    const SizedBox(height: 10.0),
-                    SizedBox(
+                          prefixIcon: Icon(Icons.phone),
+                        ),
+                      ),
+                      const SizedBox(height: 50.0),
+                      SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                            onPressed: () {
-                              Get.to(() => const OTPScreen1());
-                            },
-                            child: const Text(tNext))),
-                  ],
+                          onPressed: () {
+                            Get.to(() => const OTPScreen1());
+                          },
+                          child: const Text(tNext),
+                        ),
+                      ),
+                      const SizedBox(
+                          height: 300.0), // Add spacing below the button
+                      // Add additional widgets below the button if needed
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

@@ -22,7 +22,7 @@ class SignUpFormWidget extends StatelessWidget {
     String selectedUserType = userTypes[0]; // Default to "-Select-"
 
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: tFormHeight - 45),
+      padding: const EdgeInsets.symmetric(vertical: tFormHeight - 30),
       child: Form(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -33,28 +33,28 @@ class SignUpFormWidget extends StatelessWidget {
                 prefixIcon: Icon(Icons.person_outline_rounded),
               ),
             ),
-            const SizedBox(height: tFormHeight - 45),
+            const SizedBox(height: tFormHeight - 40),
             TextFormField(
               decoration: const InputDecoration(
                 labelText: tEmail,
                 prefixIcon: Icon(Icons.email_outlined),
               ),
             ),
-            const SizedBox(height: tFormHeight - 45),
+            const SizedBox(height: tFormHeight - 40),
             TextFormField(
               decoration: const InputDecoration(
                 labelText: tPhoneNo,
                 prefixIcon: Icon(Icons.phone),
               ),
             ),
-            const SizedBox(height: tFormHeight - 45),
+            const SizedBox(height: tFormHeight - 40),
             TextFormField(
               decoration: const InputDecoration(
                 labelText: tPassword,
                 prefixIcon: Icon(Icons.fingerprint),
               ),
             ),
-            const SizedBox(height: tFormHeight - 45),
+            const SizedBox(height: tFormHeight - 40),
             // Dropdown selection for user type
             DropdownButtonFormField(
               value: selectedUserType,
@@ -75,7 +75,7 @@ class SignUpFormWidget extends StatelessWidget {
                 prefixIcon: Icon(Icons.person),
               ),
             ),
-            const SizedBox(height: tFormHeight - 27),
+            const SizedBox(height: tFormHeight - 20),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(

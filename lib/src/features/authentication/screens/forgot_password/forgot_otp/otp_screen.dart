@@ -1,19 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:parvaah_helping_hand/src/constants/image_string.dart';
 import 'package:parvaah_helping_hand/src/constants/sizes.dart';
 import 'package:parvaah_helping_hand/src/constants/text_string.dart';
 
 class OTPScreen extends StatelessWidget {
   const OTPScreen({Key? key}) : super(key: key);
 
+  String getBackgroundImage(BuildContext context) {
+    var brightness = MediaQuery.of(context).platformBrightness;
+    return brightness == Brightness.dark
+        ? tDarkModeBackground
+        : tLightModeBackground;
+  }
+
   @override
   Widget build(BuildContext context) {
     var mediaQuery = MediaQuery.of(context);
     var brightness = mediaQuery.platformBrightness;
     final isDarkMode = brightness == Brightness.dark;
+
     return Scaffold(
       body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(getBackgroundImage(context)),
+            fit: BoxFit.cover, // Cover the whole screen
+          ),
+        ),
         padding: const EdgeInsets.all(tDefaultSize),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
