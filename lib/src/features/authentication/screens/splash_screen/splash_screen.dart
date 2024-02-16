@@ -46,7 +46,7 @@ class _SplashScreenState extends State<SplashScreen> {
             ),
             AnimatedPositioned(
               duration: const Duration(milliseconds: 3000),
-              top: mediaQuery.size.height * 0.5 - 50, // Adjusted to the center
+              top: 370, // Adjusted to the center
               left: splashScreenController.animate.value ? tDefaultSize : 0,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
