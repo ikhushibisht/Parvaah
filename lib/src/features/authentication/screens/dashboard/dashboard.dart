@@ -4,6 +4,7 @@ import 'package:parvaah_helping_hand/src/constants/colors.dart';
 import 'package:parvaah_helping_hand/src/constants/image_string.dart';
 
 class DashboardScreen extends StatelessWidget {
+  static String routeName = '/dashboard';
   const DashboardScreen({Key? key}) : super(key: key);
 
   @override

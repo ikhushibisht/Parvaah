@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -28,10 +25,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -49,11 +43,24 @@ class DefaultFirebaseOptions {
     }
   }
 
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyBwl5fN6vW0mejZCZLKLLzmUC4_cBn46r8',
+    appId: '1:553136522970:web:ddf39a5395708c471cc7e3',
+    messagingSenderId: '553136522970',
+    projectId: 'parvaah-fcf5e',
+    authDomain: 'parvaah-fcf5e.firebaseapp.com',
+    databaseURL:
+        'https://parvaah-fcf5e-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'parvaah-fcf5e.appspot.com',
+  );
+
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyD1Ut2mAe16H2OR0HZ99A3PtsiCTfivgy8',
     appId: '1:553136522970:android:400f6808af1f8fc51cc7e3',
     messagingSenderId: '553136522970',
     projectId: 'parvaah-fcf5e',
+    databaseURL:
+        'https://parvaah-fcf5e-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'parvaah-fcf5e.appspot.com',
   );
 
@@ -62,7 +69,28 @@ class DefaultFirebaseOptions {
     appId: '1:553136522970:ios:64df139d8e96cbfa1cc7e3',
     messagingSenderId: '553136522970',
     projectId: 'parvaah-fcf5e',
+    databaseURL:
+        'https://parvaah-fcf5e-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'parvaah-fcf5e.appspot.com',
+    androidClientId:
+        '553136522970-7vmbpmjmgud3a7cpbkd4bh96t3dqv8tg.apps.googleusercontent.com',
+    iosClientId:
+        '553136522970-carilt00tqisb1d1nrip3216lf898efb.apps.googleusercontent.com',
     iosBundleId: 'com.example.parvaahHelpingHand',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyCk-ijogAUEZeW1DS9HmtMTOAUsUbWbDUo',
+    appId: '1:553136522970:ios:319bd86acf110eec1cc7e3',
+    messagingSenderId: '553136522970',
+    projectId: 'parvaah-fcf5e',
+    databaseURL:
+        'https://parvaah-fcf5e-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'parvaah-fcf5e.appspot.com',
+    androidClientId:
+        '553136522970-7vmbpmjmgud3a7cpbkd4bh96t3dqv8tg.apps.googleusercontent.com',
+    iosClientId:
+        '553136522970-l7nrjejknerg60ave8j883kjke11surv.apps.googleusercontent.com',
+    iosBundleId: 'com.example.parvaahHelpingHand.RunnerTests',
   );
 }

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
@@ -5,6 +6,7 @@ import 'package:parvaah_helping_hand/src/constants/image_string.dart';
 import 'package:parvaah_helping_hand/src/constants/sizes.dart';
 import 'package:parvaah_helping_hand/src/constants/text_string.dart';
 import 'package:parvaah_helping_hand/src/features/authentication/screens/signup/signup_screen.dart';
+import 'package:parvaah_helping_hand/src/features/authentication/services/firebase_auth_methods.dart';
 
 class LoginFooterWidget extends StatelessWidget {
   const LoginFooterWidget({
@@ -22,7 +24,10 @@ class LoginFooterWidget extends StatelessWidget {
           width: double.maxFinite,
           child: OutlinedButton.icon(
             icon: const Image(image: AssetImage(tGoogleLogo), width: 20.0),
-            onPressed: () {},
+            onPressed: () {
+              FirebaseAuthMethods(FirebaseAuth.instance)
+                  .signInWithGoogle(context);
+            },
             label: const Text(tSignInWithGoogle),
           ),
         ),

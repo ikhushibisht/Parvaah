@@ -8,6 +8,7 @@ import 'package:parvaah_helping_hand/src/features/authentication/controllers/spl
 import '../../../../constants/colors.dart';
 
 class SplashScreen extends StatefulWidget {
+  static String routeName = '/splash';
   const SplashScreen({Key? key}) : super(key: key);
 
   @override

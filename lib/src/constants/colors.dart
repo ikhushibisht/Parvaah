@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 const tPrimaryColor = Color.fromRGBO(43, 4, 68, 1);
-const tSecondaryColor = Color.fromARGB(255, 218, 191, 232);
+const tSecondaryColor = Color.fromARGB(255, 182, 156, 254);
 const tAccentColor = Color.fromARGB(255, 88, 44, 116);
 const tOnboColor = Color.fromARGB(255, 12, 71, 143);
 const tBgColor = Color.fromARGB(255, 187, 126, 205);

@@ -30,10 +30,10 @@ class LoginScreen extends StatelessWidget {
                 fit: BoxFit.cover,
               ),
             ),
-            child: const Column(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                FormHeaderWidget(
+                const FormHeaderWidget(
                   image: tWelcomeScreen,
                   title: tLoginTitle,
                   subTitle: tLoginSubTitle,
@@ -42,7 +42,7 @@ class LoginScreen extends StatelessWidget {
                   textAlign: TextAlign.center,
                 ),
                 LoginForm(),
-                LoginFooterWidget(),
+                const LoginFooterWidget(),
               ],
             ),
           ),

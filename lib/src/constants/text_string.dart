@@ -21,12 +21,12 @@ const String tWelcomeTitle = "Your Gateway\nto\nCompassion and Impact.";
 const String tWelcomeSubtitle = "\nEmpowering You, to make a Difference.";
 
 const String tFullName = "Full Name";
+const String tEmailPhone = "Email/Phone no.";
 const String tEmail = "Email";
 const String tPassword = "Password";
 const String tPhoneNo = "Phone No.";
 const String tForgotPassword = "Forgot Password?";
-const String tForgotPasswordTitle = "Make Selection!";
-const String tForgotPasswordSubTitle = "Reset passwod using a preferred mode.";
+const String tForgotPasswordTitle = "Reset Password";
 
 const String tSignUpTitle = "Get On Board";
 const String tSignUpSubTitle = "Create a New Profile";
@@ -37,12 +37,11 @@ const String tLoginTitle = "Welcome back,";
 const String tLoginSubTitle = "Empower Change, Foster Hope";
 const String tDontHaveAnAccount = "Don't have an account? ";
 
-const String tResetViaEmail = "Reset via Email verification";
-const String tResetViaPhone = "Reset via Phone No. verification";
+const String tResetViaPhone = "Reset via Phone No.";
 const String tOtpTitle = "CO\nDE";
 const String tOtpSubTitle = "Verification";
 const String tOtpMessage = "Enter the OTP sent to";
-const String tNext = "Next";
+const String tDone = "Done";
 const String tUsingEmail = "Reset using Email";
 const String tUsingPhoneNo = "Reset using Phone No.";
 

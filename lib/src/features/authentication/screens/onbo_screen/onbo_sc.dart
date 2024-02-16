@@ -24,7 +24,7 @@ class OnBoardingScreen extends StatelessWidget {
             liquidController: obController.controller,
             onPageChangeCallback: obController.onPageChangedCallback,
             slideIconWidget: const Icon(Icons.arrow_back_ios),
-            waveType: WaveType.liquidReveal,
+            waveType: WaveType.circularReveal,
           ),
           Positioned(
             bottom: 37.0,

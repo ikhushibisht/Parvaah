@@ -1,25 +1,50 @@
-import 'package:flutter/foundation.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:parvaah_helping_hand/src/constants/sizes.dart';
 import 'package:parvaah_helping_hand/src/constants/text_string.dart';
+import 'package:parvaah_helping_hand/src/features/authentication/services/firebase_auth_methods.dart';
 
-class SignUpFormWidget extends StatelessWidget {
+class SignUpFormWidget extends StatefulWidget {
+  static String routeName = '/signup-email-password';
   const SignUpFormWidget({
     Key? key,
   }) : super(key: key);
+
+  @override
+  _SignUpFormWidgetState createState() => _SignUpFormWidgetState();
+}
+
+final TextEditingController fullNameController = TextEditingController();
+final TextEditingController emailController = TextEditingController();
+final TextEditingController passwordController = TextEditingController();
+
+class _SignUpFormWidgetState extends State<SignUpFormWidget> {
+  @override
+  void dispose() {
+    super.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+  }
+
+  void signUpUser() async {
+    FirebaseAuthMethods(FirebaseAuth.instance).signUpWithEmail(
+        email: emailController.text,
+        password: passwordController.text,
+        context: context);
+  }
 
   @override
   Widget build(BuildContext context) {
     // Define a list of user types including "-Select-"
     List<String> userTypes = [
       '-Select-',
+      'Admin',
       'Contributor',
       'Organization',
-      'Admin'
     ];
 
     // Declare a variable to store the selected user type
-    String selectedUserType = userTypes[0]; // Default to "-Select-"
+    String selectedUserType = '-Select-';
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: tFormHeight - 30),
@@ -35,6 +60,7 @@ class SignUpFormWidget extends StatelessWidget {
             ),
             const SizedBox(height: tFormHeight - 40),
             TextFormField(
+              controller: emailController,
               decoration: const InputDecoration(
                 labelText: tEmail,
                 prefixIcon: Icon(Icons.email_outlined),
@@ -49,6 +75,7 @@ class SignUpFormWidget extends StatelessWidget {
             ),
             const SizedBox(height: tFormHeight - 40),
             TextFormField(
+              controller: passwordController,
               decoration: const InputDecoration(
                 labelText: tPassword,
                 prefixIcon: Icon(Icons.fingerprint),
@@ -75,24 +102,11 @@ class SignUpFormWidget extends StatelessWidget {
                 prefixIcon: Icon(Icons.person),
               ),
             ),
-            const SizedBox(height: tFormHeight - 20),
+            const SizedBox(height: tFormHeight - 10),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {
-                  // Check if a valid user type is selected
-                  if (selectedUserType != '-Select-') {
-                    // Access the selected user type using the variable 'selectedUserType'
-                    if (kDebugMode) {
-                      print('Selected User Type: $selectedUserType');
-                    }
-                  } else {
-                    // Handle the case where "-Select-" is chosen
-                    if (kDebugMode) {
-                      print('Please select a valid user type');
-                    }
-                  }
-                },
+                onPressed: signUpUser,
                 child: const Text(tSignup),
               ),
             ),

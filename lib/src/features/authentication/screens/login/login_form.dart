@@ -1,33 +1,67 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/get_navigation.dart';
 import 'package:parvaah_helping_hand/src/constants/sizes.dart';
 import 'package:parvaah_helping_hand/src/constants/text_string.dart';
-import 'package:parvaah_helping_hand/src/features/authentication/screens/dashboard/dashboard.dart';
-import 'package:parvaah_helping_hand/src/features/authentication/screens/forgot_password/forgot_options/forgot_pass_model.dart';
+import 'package:parvaah_helping_hand/src/features/authentication/services/firebase_auth_methods.dart';
 
 class LoginForm extends StatefulWidget {
+  static String routeName = '/login-email-phone';
   const LoginForm({Key? key}) : super(key: key);
 
   @override
-  // ignore: library_private_types_in_public_api
   _LoginFormState createState() => _LoginFormState();
 }
 
 class _LoginFormState extends State<LoginForm> {
-  bool _isPasswordVisible = false;
-  late TextEditingController _passwordController;
+  final TextEditingController emailOrPhoneController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  bool isPasswordVisible = false;
 
-  @override
-  void initState() {
-    super.initState();
-    _passwordController = TextEditingController();
-  }
+  String? emailOrPhoneError;
+  String? passwordError;
 
   @override
   void dispose() {
-    _passwordController.dispose();
+    emailOrPhoneController.dispose();
+    passwordController.dispose();
     super.dispose();
+  }
+
+  void loginUser() {
+    String emailOrPhone = emailOrPhoneController.text.trim();
+
+    // Validate whether email or phone is provided
+    if (emailOrPhone.isEmpty) {
+      setState(() {
+        emailOrPhoneError = "This field cannot be empty";
+      });
+      return;
+    } else {
+      emailOrPhoneError = null;
+    }
+
+    if (passwordController.text.isEmpty) {
+      setState(() {
+        passwordError = "This field cannot be empty";
+      });
+      return;
+    } else {
+      passwordError = null;
+    }
+
+    // Check if the input is in the form of an email
+    if (emailOrPhone.contains('@')) {
+      // Email and Password login
+      FirebaseAuthMethods(FirebaseAuth.instance).loginWithEmail(
+        email: emailOrPhone,
+        password: passwordController.text,
+        context: context,
+      );
+    } else {
+      // Phone login
+      FirebaseAuthMethods(FirebaseAuth.instance)
+          .phoneSignIn(context, emailOrPhone);
+    }
   }
 
   @override
@@ -43,16 +77,19 @@ class _LoginFormState extends State<LoginForm> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextFormField(
-              decoration: const InputDecoration(
-                  prefixIcon: Icon(Icons.person_outline_outlined),
-                  labelText: tEmail,
-                  hintText: tEmail,
-                  border: OutlineInputBorder()),
+              controller: emailOrPhoneController,
+              decoration: InputDecoration(
+                prefixIcon: Icon(Icons.person_outline_outlined),
+                labelText: tEmailPhone,
+                hintText: tEmailPhone,
+                border: OutlineInputBorder(),
+                errorText: emailOrPhoneError,
+              ),
             ),
             const SizedBox(height: tFormHeight - 30),
             TextFormField(
-              obscureText: !_isPasswordVisible,
-              controller: _passwordController,
+              controller: passwordController,
+              obscureText: !isPasswordVisible,
               decoration: InputDecoration(
                 prefixIcon: const Icon(Icons.fingerprint),
                 labelText: tPassword,
@@ -61,32 +98,30 @@ class _LoginFormState extends State<LoginForm> {
                 suffixIcon: IconButton(
                   onPressed: () {
                     setState(() {
-                      _isPasswordVisible = !_isPasswordVisible;
+                      isPasswordVisible = !isPasswordVisible;
                     });
                   },
                   icon: Icon(
-                    _isPasswordVisible
+                    isPasswordVisible
                         ? Icons.visibility_off
                         : Icons.remove_red_eye_outlined,
                   ),
                 ),
+                errorText: passwordError,
               ),
             ),
             const SizedBox(height: tFormHeight - 30),
             Align(
               alignment: Alignment.centerRight,
               child: TextButton(
-                onPressed: () {
-                  ForgotPasswordScreen.buildShowModalBottomSheet(
-                      context, isDarkMode);
-                },
+                onPressed: () {},
                 child: const Text(tForgotPassword),
               ),
             ),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () => Get.to(() => const DashboardScreen()),
+                onPressed: loginUser,
                 child: const Text(tLogin),
               ),
             ),
