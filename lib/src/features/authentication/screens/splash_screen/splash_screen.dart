@@ -29,6 +29,7 @@ class _SplashScreenState extends State<SplashScreen> {
     var mediaQuery = MediaQuery.of(context);
     var brightness = mediaQuery.platformBrightness;
     final isDarkMode = brightness == Brightness.dark;
+
     return Scaffold(
       body: Obx(
         () => Stack(
@@ -41,20 +42,22 @@ class _SplashScreenState extends State<SplashScreen> {
               child: AnimatedOpacity(
                 duration: const Duration(milliseconds: 1600),
                 opacity: splashScreenController.animate.value ? 0.47 : 0,
-                child: const Image(image: AssetImage(tSplashImage)),
+                child: Image.asset(tSplashImage),
               ),
             ),
             AnimatedPositioned(
               duration: const Duration(milliseconds: 3000),
-              top: 370, // Adjusted to the center
-              left: splashScreenController.animate.value ? tDefaultSize : 0,
+              top: mediaQuery.size.height * 0.4,
+              left: splashScreenController.animate.value
+                  ? tDefaultSize
+                  : mediaQuery.size.width * 0.02,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     tAppName,
                     style: TextStyle(
-                      fontSize: 40.0,
+                      fontSize: mediaQuery.size.width * 0.1,
                       color: isDarkMode
                           ? const Color.fromARGB(255, 255, 255, 255)
                           : tPrimaryColor,
@@ -62,10 +65,11 @@ class _SplashScreenState extends State<SplashScreen> {
                     ),
                     textAlign: TextAlign.center,
                   ),
+                  SizedBox(height: mediaQuery.size.height * 0.01),
                   Text(
                     tAppTagLine,
                     style: TextStyle(
-                      fontSize: 22.0,
+                      fontSize: 21,
                       color: isDarkMode ? Colors.yellowAccent : Colors.black,
                       fontWeight: FontWeight.bold,
                     ),

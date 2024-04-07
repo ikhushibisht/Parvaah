@@ -45,7 +45,7 @@ class OnBoardingPageWidget extends StatelessWidget {
                   Image(
                     fit: BoxFit.fitHeight,
                     image: AssetImage(model.image),
-                    height: size.height * 0.69,
+                    height: size.height * 0.60,
                   ),
                   Column(
                     children: [
@@ -60,7 +60,7 @@ class OnBoardingPageWidget extends StatelessWidget {
                         child: Text(
                           model.subTitle,
                           style: TextStyle(
-                            fontSize: 22.0,
+                            fontSize: 18.0,
                             fontWeight: FontWeight.bold,
                             color: isDarkMode ? Colors.white : tPrimaryColor,
                           ),
@@ -78,7 +78,7 @@ class OnBoardingPageWidget extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(
-                    height: 121.0,
+                    height: 90.0,
                   ),
                 ],
               ),

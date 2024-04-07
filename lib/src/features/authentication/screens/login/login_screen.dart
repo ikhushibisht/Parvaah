@@ -20,32 +20,37 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: SingleChildScrollView(
-          child: Container(
-            padding: const EdgeInsets.all(tDefaultSize),
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image:
-                    AssetImage(getBackgroundImage(context)), // Pass the context
+        body: Stack(
+          children: [
+            Positioned.fill(
+              child: Image.asset(
+                getBackgroundImage(context),
                 fit: BoxFit.cover,
               ),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const FormHeaderWidget(
-                  image: tWelcomeScreen,
-                  title: tLoginTitle,
-                  subTitle: tLoginSubTitle,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  heightBetween: 30.0,
-                  textAlign: TextAlign.center,
+            SingleChildScrollView(
+              child: Container(
+                padding: const EdgeInsets.all(tDefaultSize),
+                child: const Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    FormHeaderWidget(
+                      image: tWelcomeScreen,
+                      title: tLoginTitle,
+                      subTitle: tLoginSubTitle,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      heightBetween: 30.0,
+                      textAlign: TextAlign.center,
+                    ),
+                    LoginForm(),
+                    LoginFooterWidget(),
+                    SizedBox(
+                        height: tDefaultSize), // add space for bottom padding
+                  ],
                 ),
-                LoginForm(),
-                const LoginFooterWidget(),
-              ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );

@@ -1,3 +1,4 @@
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
@@ -6,14 +7,19 @@ import 'package:get/get_navigation/src/routes/transitions_type.dart';
 import 'package:parvaah_helping_hand/firebase_options.dart';
 import 'package:parvaah_helping_hand/src/features/authentication/screens/splash_screen/splash_screen.dart';
 import 'package:parvaah_helping_hand/src/utils/theme/theme.dart';
-import 'package:parvaah_helping_hand/src/features/authentication/screens/login/login_form.dart';
-import 'package:parvaah_helping_hand/src/features/authentication/screens/dashboard/dashboard.dart';
+import 'package:parvaah_helping_hand/src/features/authentication/screens/contri_dash/dashboard.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await FirebaseAppCheck.instance.activate(
+    webProvider: ReCaptchaV3Provider('recaptcha-v3-site-key'),
+    androidProvider: AndroidProvider.debug,
+    appleProvider: AppleProvider.appAttest,
+  );
+
   runApp(const App());
 }
 
@@ -32,7 +38,6 @@ class App extends StatelessWidget {
       initialRoute: SplashScreen.routeName,
       getPages: [
         GetPage(name: SplashScreen.routeName, page: () => const SplashScreen()),
-        GetPage(name: LoginForm.routeName, page: () => const LoginForm()),
         GetPage(
             name: DashboardScreen.routeName,
             page: () => const DashboardScreen()),

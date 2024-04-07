@@ -11,7 +11,7 @@ class SplashScreenController
   Future startAnimation() async {
     await Future.delayed(const Duration(milliseconds: 1000));
     animate.value = true;
-    await Future.delayed(const Duration(milliseconds: 5000));
+    await Future.delayed(const Duration(milliseconds: 3000));
     Get.to(() => const OnBoardingScreen());
   }
 }

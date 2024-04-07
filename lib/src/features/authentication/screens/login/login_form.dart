@@ -1,7 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:parvaah_helping_hand/src/constants/sizes.dart';
 import 'package:parvaah_helping_hand/src/constants/text_string.dart';
+import 'package:parvaah_helping_hand/src/features/authentication/screens/contri_dash/dashboard.dart';
+import 'package:parvaah_helping_hand/src/features/authentication/screens/forgot_password/forgot_options/forgot_pass_model.dart';
+import 'package:parvaah_helping_hand/src/features/authentication/screens/org_dash/dashboard2.dart';
 import 'package:parvaah_helping_hand/src/features/authentication/services/firebase_auth_methods.dart';
 
 class LoginForm extends StatefulWidget {
@@ -13,21 +18,15 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
-  final TextEditingController emailOrPhoneController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+  late final TextEditingController emailOrPhoneController =
+      TextEditingController();
+  late final TextEditingController passwordController = TextEditingController();
   bool isPasswordVisible = false;
 
   String? emailOrPhoneError;
   String? passwordError;
 
-  @override
-  void dispose() {
-    emailOrPhoneController.dispose();
-    passwordController.dispose();
-    super.dispose();
-  }
-
-  void loginUser() {
+  void loginUser() async {
     String emailOrPhone = emailOrPhoneController.text.trim();
 
     // Validate whether email or phone is provided
@@ -56,33 +55,99 @@ class _LoginFormState extends State<LoginForm> {
         email: emailOrPhone,
         password: passwordController.text,
         context: context,
+        onLoginSuccess: (userType) {
+          if (userType == 'Contributor') {
+            // Navigate to Contributor Dashboard
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const DashboardScreen(),
+              ),
+            );
+          } else if (userType == 'Organization') {
+            // Navigate to Organization Dashboard
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => OrganizationDashboardScreen(),
+              ),
+            );
+          }
+        },
       );
     } else {
       // Phone login
       FirebaseAuthMethods(FirebaseAuth.instance)
-          .phoneSignIn(context, emailOrPhone);
+          .phoneSignIn(context, emailOrPhone, onLoginSuccess: (userType) {
+        if (userType == 'Contributor') {
+          // Navigate to Contributor Dashboard
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const DashboardScreen(),
+            ),
+          );
+        } else if (userType == 'Organization') {
+          // Navigate to Organization Dashboard
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => OrganizationDashboardScreen(),
+            ),
+          );
+        }
+      });
     }
+  }
+
+  void showResetPasswordBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.all(20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const Text(
+                  "Reset Password",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    Get.to(() => const ResetPasswordPage());
+                  },
+                  child: Text("Reset Password using Email"),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    var mediaQuery = MediaQuery.of(context);
-    var brightness = mediaQuery.platformBrightness;
-    final isDarkMode = brightness == Brightness.dark;
-
     return Form(
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: tFormHeight - 25),
+        padding: const EdgeInsets.symmetric(vertical: tFormHeight - 5),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextFormField(
               controller: emailOrPhoneController,
               decoration: InputDecoration(
-                prefixIcon: Icon(Icons.person_outline_outlined),
+                prefixIcon: const Icon(Icons.person_outline_outlined),
                 labelText: tEmailPhone,
                 hintText: tEmailPhone,
-                border: OutlineInputBorder(),
+                border: const OutlineInputBorder(),
                 errorText: emailOrPhoneError,
               ),
             ),
@@ -91,7 +156,12 @@ class _LoginFormState extends State<LoginForm> {
               controller: passwordController,
               obscureText: !isPasswordVisible,
               decoration: InputDecoration(
-                prefixIcon: const Icon(Icons.fingerprint),
+                prefixIcon: Transform.rotate(
+                  angle: -135 * 3.14159265 / 180,
+                  child: const Icon(
+                    Icons.key,
+                  ),
+                ),
                 labelText: tPassword,
                 hintText: tPassword,
                 border: const OutlineInputBorder(),
@@ -110,15 +180,17 @@ class _LoginFormState extends State<LoginForm> {
                 errorText: passwordError,
               ),
             ),
-            const SizedBox(height: tFormHeight - 30),
+            const SizedBox(height: tFormHeight - 25),
             Align(
               alignment: Alignment.centerRight,
               child: TextButton(
-                onPressed: () {},
+                onPressed: showResetPasswordBottomSheet,
                 child: const Text(tForgotPassword),
               ),
             ),
+            const SizedBox(height: tFormHeight - 20),
             SizedBox(
+              height: tFormHeight,
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: loginUser,

@@ -36,7 +36,7 @@ class FormHeaderWidget extends StatelessWidget {
           fit: BoxFit.fitWidth,
           image: AssetImage(image),
           width: size.width * 3,
-          height: size.height * 0.38,
+          height: size.height * 0.28,
           colorBlendMode: BlendMode.darken,
         ),
         Text(title,

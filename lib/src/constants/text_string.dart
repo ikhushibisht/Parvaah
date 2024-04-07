@@ -1,7 +1,7 @@
 const String tLogin = "Login";
 const String tSignup = "Sign Up";
 
-const String tAppName = "     PARVAAH \n    A Helping Hand";
+const String tAppName = "      PARVAAH \n     A Helping Hand";
 const String tAppTagLine = "        Building a better tomorrow";
 
 // --onboarding
@@ -38,8 +38,6 @@ const String tLoginSubTitle = "Empower Change, Foster Hope";
 const String tDontHaveAnAccount = "Don't have an account? ";
 
 const String tResetViaPhone = "Reset via Phone No.";
-const String tOtpTitle = "CO\nDE";
-const String tOtpSubTitle = "Verification";
 const String tOtpMessage = "Enter the OTP sent to";
 const String tDone = "Done";
 const String tUsingEmail = "Reset using Email";
