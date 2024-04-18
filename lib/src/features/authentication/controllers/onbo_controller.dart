@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 import 'package:liquid_swipe/PageHelpers/LiquidController.dart';
-import 'package:parvaah_helping_hand/src/constants/colors.dart';
 import 'package:parvaah_helping_hand/src/constants/image_string.dart';
 import 'package:parvaah_helping_hand/src/constants/text_string.dart';
 import 'package:parvaah_helping_hand/src/features/authentication/models/model_onbo.dart';
@@ -18,7 +17,6 @@ class OnBoardingController extends GetxController {
         title: tOnboardingTitle1,
         subTitle: tOnboardingSubTitle1,
         counterText: tOnboardingCounter1,
-        bgColor: Get.isDarkMode ? tAccentColor : tOnBoardingPage1,
       ),
     ),
     OnBoardingPageWidget(
@@ -27,7 +25,6 @@ class OnBoardingController extends GetxController {
         title: tOnboardingTitle2,
         subTitle: tOnboardingSubTitle2,
         counterText: tOnboardingCounter2,
-        bgColor: Get.isDarkMode ? tOnboColor : tOnBoardingPage2,
       ),
     ),
     OnBoardingPageWidget(
@@ -36,7 +33,6 @@ class OnBoardingController extends GetxController {
         title: tOnboardingTitle3,
         subTitle: tOnboardingSubTitle3,
         counterText: tOnboardingCounter3,
-        bgColor: Get.isDarkMode ? tOnboColor2 : tOnBoardingPage3,
       ),
     ),
   ];

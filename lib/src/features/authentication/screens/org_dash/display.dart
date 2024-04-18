@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:parvaah_helping_hand/src/constants/colors.dart';
@@ -24,9 +23,7 @@ class PostDetailsScreen extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.edit),
-            onPressed: () {
-              // Navigate to the edit screen
-            },
+            onPressed: () {},
           ),
         ],
       ),
@@ -40,11 +37,6 @@ class PostDetailsScreen extends StatelessWidget {
               errorBuilder: (context, error, stackTrace) =>
                   const Icon(Icons.error),
             ),
-            CachedNetworkImage(
-              imageUrl: post['imageURL'],
-              errorWidget: (context, url, error) => const Icon(Icons.error),
-            ),
-
             Text(
               'Subtitle: ${post['subtitle']}',
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -56,7 +48,7 @@ class PostDetailsScreen extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             Text(
-              'To Collect: ${post['amountNeeded']}',
+              'To Collect: ${post['totalAmount']}',
               style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),

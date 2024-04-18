@@ -1,12 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:parvaah_helping_hand/src/constants/colors.dart';
-import 'package:parvaah_helping_hand/src/constants/image_string.dart';
 import 'package:parvaah_helping_hand/src/features/authentication/screens/contri_dash/donate.dart';
-import 'package:parvaah_helping_hand/src/features/authentication/screens/contri_dash/donation_dashboard/education.dart';
-import 'package:parvaah_helping_hand/src/features/authentication/screens/contri_dash/donation_dashboard/food.dart';
-import 'package:parvaah_helping_hand/src/features/authentication/screens/contri_dash/donation_dashboard/recovery.dart';
-import 'package:parvaah_helping_hand/src/features/authentication/screens/contri_dash/donation_dashboard/shelter.dart';
+import 'package:parvaah_helping_hand/src/features/authentication/screens/contri_dash/donation_dashboard/oneScreen.dart';
 import 'package:parvaah_helping_hand/src/features/authentication/screens/contri_dash/drawer.dart';
 import 'package:parvaah_helping_hand/src/features/authentication/screens/contri_dash/events.dart';
 import 'package:parvaah_helping_hand/src/features/authentication/screens/contri_dash/sponsor.dart';
@@ -57,7 +54,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
       body: ListView(
         children: [
           SizedBox(
-            // You can adjust the height based on your design
             height: mediaQuery.size.height,
             child: PageView(
               controller: _pageController,
@@ -317,101 +313,88 @@ class DashboardScreenContent extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 8.0),
-                // Scrollable Causes in Box Structure
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      _EmergencyCauseItem(
-                        image: tEdu1,
-                        label: 'Building Dreams through Education',
-                        isDarkMode: isDarkMode,
-                        onTap: () {
-                          // Navigate to the corresponding screen
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => EducationScreen()),
-                          );
-                        },
+
+                StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance
+                      .collection('posts')
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Container(); // Display an empty container while waiting for data
+                    }
+                    if (snapshot.hasError) {
+                      return Text(
+                        'Error: ${snapshot.error}',
+                        style: const TextStyle(
+                            color: Colors
+                                .red), // Optionally style the error message
+                      );
+                    }
+                    final data = snapshot.data!.docs;
+                    return SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: List.generate(
+                          data.length,
+                          (index) {
+                            final post = data[index];
+                            return _EmergencyCauseItem(
+                              image: post['imageURL'],
+                              label: post['title'],
+                              isDarkMode: isDarkMode,
+                              onTap: () {
+                                // Navigate to the corresponding screen
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        OneScreen(postId: post.id),
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                        ),
                       ),
-                      _EmergencyCauseItem(
-                        image: tDisaster,
-                        label: 'Turning Disaster into Determination',
-                        isDarkMode: isDarkMode,
-                        onTap: () {
-                          // Navigate to the corresponding screen
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const RecoveryScreen()),
-                          );
-                        },
-                      ),
-                      _EmergencyCauseItem(
-                        image: tHom1,
-                        label: 'From Despair to "Home", provide shelter ',
-                        isDarkMode: isDarkMode,
-                        onTap: () {
-                          // Navigate to the corresponding screen
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const ShelterScreen()),
-                          );
-                        },
-                      ),
-                      _EmergencyCauseItem(
-                        image: tFood,
-                        label: 'Fighting Hunger, Feeding Souls',
-                        isDarkMode: isDarkMode,
-                        onTap: () {
-                          // Navigate to the corresponding screen
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const FoodScreen()),
-                          );
-                        },
-                      ),
-                    ],
+                    );
+                  },
+                ),
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const SizedBox(height: 12.0),
+                        ElevatedButton.icon(
+                          onPressed: () {
+                            onJumpToEvents();
+                          },
+                          icon: Icon(
+                            Icons.location_on,
+                            size: 22,
+                            color: isDarkMode ? Colors.white : tPrimaryColor,
+                          ),
+                          label: Text(
+                            'Explore More',
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: isDarkMode ? Colors.white : tPrimaryColor,
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                isDarkMode ? Colors.black : tDashboardBg,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
             ),
-          ),
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 12.0),
-                  ElevatedButton.icon(
-                    onPressed: () {
-                      onJumpToEvents();
-                    },
-                    icon: Icon(
-                      Icons.location_on,
-                      size: 22,
-                      color: isDarkMode ? Colors.white : tPrimaryColor,
-                    ),
-                    label: Text(
-                      'Explore More',
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: isDarkMode ? Colors.white : tPrimaryColor,
-                      ),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: isDarkMode ? Colors.black : tDashboardBg,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+          )
         ],
       ),
     );
@@ -478,7 +461,7 @@ class _EmergencyCauseItem extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(8.0),
-              child: Image.asset(
+              child: Image.network(
                 image,
                 height: 160.0,
                 width: double.infinity,
@@ -487,18 +470,19 @@ class _EmergencyCauseItem extends StatelessWidget {
             ),
             const SizedBox(height: 6.0),
             Container(
+              width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 7.0),
               decoration: BoxDecoration(
                 color: isDarkMode
                     ? tPrimaryColor
                     : const Color.fromARGB(255, 242, 243, 245),
-                borderRadius: BorderRadius.circular(10.0),
+                borderRadius: BorderRadius.circular(4.0),
               ),
               child: Text(
                 label,
                 style: TextStyle(
                   color: isDarkMode ? Colors.white : Colors.black,
-                  fontSize: 15,
+                  fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
               ),

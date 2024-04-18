@@ -87,13 +87,16 @@ class _DrawerScreenState extends State<DrawerScreen> {
 
     return FutureBuilder<DocumentSnapshot>(
       future: _firestore.collection('users').doc(_auth.currentUser!.uid).get(),
-      builder:
-          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+      builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator(); // Show loading indicator while data is fetched
+          return Container(); // Display an empty container while waiting for data
         }
         if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
+          return Text(
+            'Error: ${snapshot.error}',
+            style: const TextStyle(
+                color: Colors.red), // Optionally style the error message
+          );
         }
         var userData = snapshot.data!.data() as Map<String, dynamic>;
 

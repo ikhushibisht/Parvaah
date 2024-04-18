@@ -1,22 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:parvaah_helping_hand/src/constants/colors.dart';
-import 'package:parvaah_helping_hand/src/constants/image_string.dart';
-import 'package:parvaah_helping_hand/src/features/authentication/screens/contri_dash/donation_dashboard/payment.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-class EducationScreen extends StatefulWidget {
-  const EducationScreen({Key? key}) : super(key: key);
+class OneScreen extends StatefulWidget {
+  final String postId; // Add a parameter to receive the post ID
+  const OneScreen({Key? key, required this.postId}) : super(key: key);
 
   @override
-  _EducationScreenState createState() => _EducationScreenState();
+  _OneScreenState createState() => _OneScreenState();
 }
 
-class _EducationScreenState extends State<EducationScreen>
+class _OneScreenState extends State<OneScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
 
-  double totalAmount = 10000.0; // Set the total amount to be raised
-  double collectedAmount = 2220.0; // Set the collected amount initially
+  String title = '';
+  String subtitle = '';
+  String causeDetails = '';
+  String imageUrl = '';
+  double totalAmount = 0.0;
+  double collectedAmount = 0.0;
 
   @override
   void initState() {
@@ -25,12 +29,40 @@ class _EducationScreenState extends State<EducationScreen>
       duration: const Duration(seconds: 2),
       vsync: this,
     )..repeat(reverse: true); // Make the animation loop with reverse
+
+    // Fetch data from Firestore based on the selected post ID
+    _fetchDataFromFirestore();
   }
 
   @override
   void dispose() {
     _animationController.dispose();
     super.dispose();
+  }
+
+  // Fetch data from Firestore based on the selected post ID
+  Future<void> _fetchDataFromFirestore() async {
+    try {
+      final DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+          .collection('posts')
+          .doc(widget.postId)
+          .get();
+
+      if (documentSnapshot.exists) {
+        // Update state with fetched data
+        setState(() {
+          title = documentSnapshot['title'];
+          totalAmount = documentSnapshot['totalAmount'];
+          collectedAmount = documentSnapshot['collectedAmount'];
+          subtitle = documentSnapshot['subtitle'];
+          causeDetails = documentSnapshot['causeDetails'];
+          imageUrl = documentSnapshot['imageURL'];
+        });
+      }
+    } catch (e) {
+      // Handle errors
+      print('Error fetching data: $e');
+    }
   }
 
   Future<void> _startAnimation() async {
@@ -49,7 +81,7 @@ class _EducationScreenState extends State<EducationScreen>
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            'Education Cause',
+            title, // Use the fetched subtitle
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
@@ -72,10 +104,13 @@ class _EducationScreenState extends State<EducationScreen>
                       Container(
                         height: 400,
                         decoration: BoxDecoration(
-                          image: const DecorationImage(
-                            image: AssetImage(tEdu1),
-                            fit: BoxFit.cover,
-                          ),
+                          image: imageUrl.isNotEmpty
+                              ? DecorationImage(
+                                  image: NetworkImage(
+                                      imageUrl), // Use NetworkImage directly
+                                  fit: BoxFit.cover,
+                                )
+                              : null, // Set to null if imageUrl is empty
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
@@ -111,7 +146,7 @@ class _EducationScreenState extends State<EducationScreen>
                     child: Column(
                       children: [
                         Text(
-                          'Building Dreams through Education',
+                          subtitle, // Use the fetched subtitle
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -120,8 +155,7 @@ class _EducationScreenState extends State<EducationScreen>
                         ),
                         const SizedBox(height: 10),
                         Text(
-                          textAlign: TextAlign.justify,
-                          'Your donations can provide vital shelter to the impoverished, offering refuge from harsh conditions and ensuring basic security. By supporting housing initiatives, you empower vulnerable individuals and families, granting them stability and a foundation for a brighter future.',
+                          causeDetails, // Use the fetched cause details
                           style: TextStyle(
                             fontSize: 16,
                             color:
@@ -132,36 +166,40 @@ class _EducationScreenState extends State<EducationScreen>
                     ),
                   ),
                   const SizedBox(height: 10),
-                  ElevatedButton.icon(
-                    onPressed: () {
-                      Get.to(() => const PaymentScreen());
+                  GestureDetector(
+                    onTap: () {
+                      InAppWebView(
+                        initialData: InAppWebViewInitialData(
+                          data: '''
+        <html>
+          <form>
+            <script src="https://checkout.razorpay.com/v1/payment-button.js" data-payment_button_id="pl_NznGUEqEUBSjms" async></script>
+          </form>
+        </html>
+      ''',
+                          baseUrl: WebUri('https://checkout.razorpay.com'),
+                        ),
+                      );
                     },
-                    icon: AnimatedBuilder(
-                      animation: _animationController,
-                      builder: (context, child) {
-                        return Transform.rotate(
-                          angle: _animationController.value * 2.0 * 3.14,
-                          child: Icon(
-                            Icons.monetization_on,
-                            size: 36,
-                            color: isDarkMode ? Colors.white : tPrimaryColor,
-                          ),
-                        );
+                    child: Image.network(
+                      'https://checkout.razorpay.com/v1/payment-button.js?payment_button_id=pl_NznGUEqEUBSjms',
+                      loadingBuilder: (BuildContext context, Widget child,
+                          ImageChunkEvent? loadingProgress) {
+                        if (loadingProgress == null) {
+                          // If the image has finished loading, return the image widget
+                          return child;
+                        } else {
+                          // If the image is still loading, you can return a loading indicator or placeholder
+                          return CircularProgressIndicator(); // Example of using a CircularProgressIndicator
+                        }
                       },
                     ),
-                    label: Text(
-                      'DONATE',
-                      style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        color: isDarkMode ? Colors.white : tPrimaryColor,
-                      ),
-                    ),
                   ),
+
                   const SizedBox(height: 10),
                   // LinearProgressIndicator for funds collected
                   LinearProgressIndicator(
-                    value: collectedAmount / totalAmount,
+                    value: collectedAmount,
                     backgroundColor: Colors.grey,
                     valueColor: AlwaysStoppedAnimation<Color>(
                       isDarkMode ? tSecondaryColor : tPrimaryColor,

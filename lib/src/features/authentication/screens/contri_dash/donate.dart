@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:parvaah_helping_hand/src/constants/colors.dart';
-import 'package:parvaah_helping_hand/src/constants/image_string.dart';
-import 'package:parvaah_helping_hand/src/features/authentication/screens/contri_dash/donation_dashboard/education.dart';
-import 'package:parvaah_helping_hand/src/features/authentication/screens/contri_dash/donation_dashboard/food.dart';
-import 'package:parvaah_helping_hand/src/features/authentication/screens/contri_dash/donation_dashboard/recovery.dart';
-import 'package:parvaah_helping_hand/src/features/authentication/screens/contri_dash/donation_dashboard/shelter.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:parvaah_helping_hand/src/features/authentication/screens/contri_dash/donation_dashboard/oneScreen.dart';
 
 class DonateScreen extends StatelessWidget {
   const DonateScreen({Key? key}) : super(key: key);
@@ -28,53 +25,42 @@ class DonateScreen extends StatelessWidget {
           padding: const EdgeInsets.only(
               top: 35.0), // Adjust the top padding as needed
           children: [
-            _EmergencyCauseItem(
-              image: tEdu2,
-              label: 'Building Dreams through Education',
-              isDarkMode: true,
-              onTap: () {
-                // Navigate to the corresponding screen
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => EducationScreen()),
-                );
-              },
-            ),
-            _EmergencyCauseItem(
-              image: tRecov1,
-              label: 'Turning Disaster into Determination',
-              isDarkMode: true,
-              onTap: () {
-                // Navigate to the corresponding screen
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const RecoveryScreen()),
-                );
-              },
-            ),
-            _EmergencyCauseItem(
-              image: tHome,
-              label: 'From Despair to "Home" ',
-              isDarkMode: true,
-              onTap: () {
-                // Navigate to the corresponding screen
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const ShelterScreen()),
-                );
-              },
-            ),
-            _EmergencyCauseItem(
-              image: tFood1,
-              label: 'Fighting Hunger, Feeding Souls',
-              isDarkMode: true,
-              onTap: () {
-                // Navigate to the corresponding screen
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const FoodScreen()),
+            // Fetching and displaying causes from Firestore
+            StreamBuilder<QuerySnapshot>(
+              stream:
+                  FirebaseFirestore.instance.collection('posts').snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Container(); // Display an empty container while waiting for data
+                }
+                if (snapshot.hasError) {
+                  return Text(
+                    'Error: ${snapshot.error}',
+                    style: const TextStyle(
+                        color:
+                            Colors.red), // Optionally style the error message
+                  );
+                }
+                final data = snapshot.data!.docs;
+                return Column(
+                  children: List.generate(data.length, (index) {
+                    final post = data[index];
+                    return _EmergencyCauseItem(
+                      imageUrl: post['imageURL'],
+                      label: post['title'],
+                      isDarkMode: true,
+                      onTap: () {
+                        // Navigate to the corresponding screen
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => OneScreen(
+                                    postId: post.id,
+                                  )),
+                        );
+                      },
+                    );
+                  }),
                 );
               },
             ),
@@ -154,13 +140,13 @@ class _CustomAppBar extends StatelessWidget {
 }
 
 class _EmergencyCauseItem extends StatelessWidget {
-  final String image;
+  final String imageUrl;
   final String label;
   final bool isDarkMode;
   final VoidCallback onTap;
 
   const _EmergencyCauseItem({
-    required this.image,
+    required this.imageUrl,
     required this.label,
     required this.isDarkMode,
     required this.onTap,
@@ -168,25 +154,29 @@ class _EmergencyCauseItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(
+        'Image URL: $imageUrl'); // Add this line to check the value of imageUrl
     return GestureDetector(
       onTap: onTap,
       child: ListTile(
         leading: ClipRRect(
-          borderRadius: BorderRadius.circular(8.0),
+          borderRadius: BorderRadius.circular(4.0),
           child: SizedBox(
             width: 40.0,
             height: 40.0,
-            child: Image.asset(
-              image,
-              fit: BoxFit.cover,
-            ),
+            child: imageUrl.isNotEmpty
+                ? Image.network(
+                    imageUrl,
+                    fit: BoxFit.cover,
+                  )
+                : const Placeholder(), // Placeholder or default image
           ),
         ),
         title: Text(
           label,
           style: const TextStyle(
             color: Colors.black,
-            fontSize: 16,
+            fontSize: 18,
           ),
         ),
         trailing: _PopupMenuButton(onTap: onTap),

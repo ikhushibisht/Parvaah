@@ -42,9 +42,3 @@ const String tOtpMessage = "Enter the OTP sent to";
 const String tDone = "Done";
 const String tUsingEmail = "Reset using Email";
 const String tUsingPhoneNo = "Reset using Phone No.";
-
-const String tHeading = "PARVAAH - A Helping Hand";
-const String tSponsorship = "Sponsorship";
-const String tDonation = "Donations";
-const String tCharityDiscovery = "Charity Discovery";
-const String tEmergencyAssistance = "Emergency Assistance";
