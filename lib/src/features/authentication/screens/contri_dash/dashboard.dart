@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:parvaah_helping_hand/src/constants/colors.dart';
@@ -347,8 +348,11 @@ class DashboardScreenContent extends StatelessWidget {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) =>
-                                        OneScreen(postId: post.id),
+                                    builder: (context) => OneScreen(
+                                      postId: post.id,
+                                      userId: FirebaseAuth
+                                          .instance.currentUser!.uid,
+                                    ),
                                   ),
                                 );
                               },

@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:parvaah_helping_hand/src/constants/colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:parvaah_helping_hand/src/features/authentication/screens/contri_dash/donation_dashboard/payment.dart';
 
 class OneScreen extends StatefulWidget {
-  final String postId; // Add a parameter to receive the post ID
-  const OneScreen({Key? key, required this.postId}) : super(key: key);
+  final String postId;
+  final String userId;
+  const OneScreen({Key? key, required this.postId, required this.userId})
+      : super(key: key);
 
   @override
   _OneScreenState createState() => _OneScreenState();
@@ -28,9 +32,7 @@ class _OneScreenState extends State<OneScreen>
     _animationController = AnimationController(
       duration: const Duration(seconds: 2),
       vsync: this,
-    )..repeat(reverse: true); // Make the animation loop with reverse
-
-    // Fetch data from Firestore based on the selected post ID
+    )..repeat(reverse: true);
     _fetchDataFromFirestore();
   }
 
@@ -40,7 +42,6 @@ class _OneScreenState extends State<OneScreen>
     super.dispose();
   }
 
-  // Fetch data from Firestore based on the selected post ID
   Future<void> _fetchDataFromFirestore() async {
     try {
       final DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
@@ -49,19 +50,53 @@ class _OneScreenState extends State<OneScreen>
           .get();
 
       if (documentSnapshot.exists) {
-        // Update state with fetched data
-        setState(() {
-          title = documentSnapshot['title'];
-          totalAmount = documentSnapshot['totalAmount'];
-          collectedAmount = documentSnapshot['collectedAmount'];
-          subtitle = documentSnapshot['subtitle'];
-          causeDetails = documentSnapshot['causeDetails'];
-          imageUrl = documentSnapshot['imageURL'];
-        });
+        double fetchedTotalAmount = documentSnapshot['totalAmount'];
+        if (fetchedTotalAmount > 0) {
+          setState(() {
+            title = documentSnapshot['title'];
+            totalAmount = fetchedTotalAmount;
+            subtitle = documentSnapshot['subtitle'];
+            causeDetails = documentSnapshot['causeDetails'];
+            imageUrl = documentSnapshot['imageURL'];
+          });
+          await _fetchCollectedAmount();
+        } else {
+          print('Fetched totalAmount is not greater than 0');
+        }
       }
     } catch (e) {
-      // Handle errors
       print('Error fetching data: $e');
+    }
+  }
+
+  Future<void> _fetchCollectedAmount() async {
+    try {
+      // Fetch the post document from the Firestore
+      DocumentSnapshot postSnapshot = await FirebaseFirestore.instance
+          .collection('posts')
+          .doc(widget.postId)
+          .get();
+
+      // Retrieve the title of the post
+      String postTitle = postSnapshot['title'];
+
+      // Query payments where the postId matches the postTitle
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('payments')
+          .where('postId', isEqualTo: postTitle)
+          .get();
+
+      double totalCollected = 0.0;
+      querySnapshot.docs.forEach((doc) {
+        // Sum up all the payment amounts related to the post
+        totalCollected += double.parse(doc['amount'].toString());
+      });
+
+      setState(() {
+        collectedAmount = totalCollected;
+      });
+    } catch (e) {
+      print('Error fetching collected amount: $e');
     }
   }
 
@@ -166,40 +201,38 @@ class _OneScreenState extends State<OneScreen>
                     ),
                   ),
                   const SizedBox(height: 10),
-                  GestureDetector(
-                    onTap: () {
-                      InAppWebView(
-                        initialData: InAppWebViewInitialData(
-                          data: '''
-        <html>
-          <form>
-            <script src="https://checkout.razorpay.com/v1/payment-button.js" data-payment_button_id="pl_NznGUEqEUBSjms" async></script>
-          </form>
-        </html>
-      ''',
-                          baseUrl: WebUri('https://checkout.razorpay.com'),
-                        ),
-                      );
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      Get.to(() => PaymentScreen(
+                          postId: widget.postId, userId: widget.userId));
                     },
-                    child: Image.network(
-                      'https://checkout.razorpay.com/v1/payment-button.js?payment_button_id=pl_NznGUEqEUBSjms',
-                      loadingBuilder: (BuildContext context, Widget child,
-                          ImageChunkEvent? loadingProgress) {
-                        if (loadingProgress == null) {
-                          // If the image has finished loading, return the image widget
-                          return child;
-                        } else {
-                          // If the image is still loading, you can return a loading indicator or placeholder
-                          return CircularProgressIndicator(); // Example of using a CircularProgressIndicator
-                        }
+                    icon: AnimatedBuilder(
+                      animation: _animationController,
+                      builder: (context, child) {
+                        return Transform.rotate(
+                          angle: _animationController.value * 2.0 * 3.14,
+                          child: Icon(
+                            Icons.monetization_on,
+                            size: 36,
+                            color: isDarkMode ? Colors.white : tPrimaryColor,
+                          ),
+                        );
                       },
                     ),
+                    label: Text(
+                      'DONATE',
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        color: isDarkMode ? Colors.white : tPrimaryColor,
+                      ),
+                    ),
                   ),
-
                   const SizedBox(height: 10),
                   // LinearProgressIndicator for funds collected
                   LinearProgressIndicator(
-                    value: collectedAmount,
+                    value:
+                        totalAmount > 0 ? collectedAmount / totalAmount : 0.0,
                     backgroundColor: Colors.grey,
                     valueColor: AlwaysStoppedAnimation<Color>(
                       isDarkMode ? tSecondaryColor : tPrimaryColor,
@@ -208,7 +241,7 @@ class _OneScreenState extends State<OneScreen>
                   const SizedBox(height: 10),
                   // Text showing the amount collected
                   Text(
-                    'Collected: \₹${collectedAmount.toString()}',
+                    'Collected: ₹${collectedAmount.toString()}',
                     style: TextStyle(
                       fontSize: 17,
                       color: isDarkMode ? Colors.white : tPrimaryColor,

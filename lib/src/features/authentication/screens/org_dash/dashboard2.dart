@@ -4,8 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:parvaah_helping_hand/src/constants/colors.dart';
 import 'package:parvaah_helping_hand/src/features/authentication/screens/contri_dash/drawer.dart';
 import 'package:parvaah_helping_hand/src/features/authentication/screens/org_dash/display.dart';
-import 'package:parvaah_helping_hand/src/features/authentication/screens/org_dash/getUpdates.dart';
-import 'package:parvaah_helping_hand/src/features/authentication/screens/org_dash/addUpdates.dart';
+import 'package:parvaah_helping_hand/src/features/authentication/screens/org_dash/getupdates.dart';
+import 'package:parvaah_helping_hand/src/features/authentication/screens/org_dash/addupdates.dart';
 
 class OrganizationDashboardScreen extends StatefulWidget {
   const OrganizationDashboardScreen({Key? key}) : super(key: key);
@@ -35,6 +35,7 @@ class _OrganizationDashboardScreenState
     final isDarkMode = brightness == Brightness.dark;
 
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: isDarkMode ? tAccentColor : tDashboardBg,
       appBar: AppBar(
         backgroundColor: isDarkMode ? tPrimaryColor : tBgColor,
@@ -76,9 +77,8 @@ class _OrganizationDashboardScreenState
             MaterialPageRoute(builder: (context) => Updates()),
           );
         },
-        child: const Icon(Icons.add),
-        backgroundColor: const Color.fromARGB(
-            255, 244, 243, 243), // Set your preferred button color
+        backgroundColor: const Color.fromARGB(255, 244, 243, 243),
+        child: const Icon(Icons.add), // Set your preferred button color
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
@@ -268,8 +268,7 @@ class OrgDashScreenContent extends StatelessWidget {
                           ),
                           const SizedBox(height: 5),
                           Text(
-                            post[
-                                'subtitle'], // Assuming 'subtitle' is a field in Firestore
+                            post['subtitle'],
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.grey[600],

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:csc_picker/csc_picker.dart';
@@ -16,6 +17,7 @@ class SponsorPersonScreen extends StatefulWidget {
 
 class _SponsorPersonScreenState extends State<SponsorPersonScreen> {
   File? _imageFile; // Store the selected image file
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   // Add controllers for the form fields
   TextEditingController nameController = TextEditingController();
@@ -284,6 +286,9 @@ class _SponsorPersonScreenState extends State<SponsorPersonScreen> {
         await storageReference.putFile(_imageFile!);
         final String imageUrl = await storageReference.getDownloadURL();
 
+        // Fetch the name of the user who is sponsoring from Firestore
+        String sponsorName = await _fetchSponsorName();
+
         // Update sponsor details in Firestore
         await _firestore.collection('sponsors').add({
           'name': nameController.text,
@@ -294,6 +299,7 @@ class _SponsorPersonScreenState extends State<SponsorPersonScreen> {
           'state': selectedState,
           'pincode': pinController.text,
           'image_url': imageUrl,
+          'sponsored_by': sponsorName, // Add sponsored by field
           'timestamp': FieldValue.serverTimestamp(),
         });
 
@@ -332,6 +338,29 @@ class _SponsorPersonScreenState extends State<SponsorPersonScreen> {
           backgroundColor: Colors.red,
         ),
       );
+    }
+  }
+
+  Future<String> _fetchSponsorName() async {
+    // Assuming you have a user authentication system, and the user is logged in.
+    // Fetch the currently logged-in user's name from the "users" collection in Firestore.
+    // You need to replace 'currentUserId' with the actual ID of the logged-in user.
+    DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(_auth.currentUser!.uid)
+        .get();
+    if (userSnapshot.exists) {
+      // Cast the return value of userSnapshot.data() to Map<String, dynamic>
+      Map<String, dynamic>? userData =
+          userSnapshot.data() as Map<String, dynamic>?;
+
+      // Access the 'fullName' field from the userData map
+      String fullName = userData?['fullName'] ?? 'Unknown';
+
+      return fullName;
+    } else {
+      // Return a default value or handle the case when user data is not found
+      return 'Unknown';
     }
   }
 }

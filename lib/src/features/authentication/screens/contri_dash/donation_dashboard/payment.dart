@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:parvaah_helping_hand/src/constants/colors.dart';
 import 'package:parvaah_helping_hand/src/constants/image_string.dart';
 
 class PaymentScreen extends StatefulWidget {
-  const PaymentScreen({Key? key}) : super(key: key);
+  final String postId;
+  final String userId;
+
+  const PaymentScreen({Key? key, required this.postId, required this.userId})
+      : super(key: key);
 
   @override
   State<PaymentScreen> createState() => _PaymentScreenState();
@@ -14,6 +19,8 @@ class PaymentScreen extends StatefulWidget {
 class _PaymentScreenState extends State<PaymentScreen> {
   late Razorpay _razorpay;
   TextEditingController amtController = TextEditingController();
+  String postTitle = '';
+  String userFullName = '';
 
   @override
   void initState() {
@@ -22,6 +29,36 @@ class _PaymentScreenState extends State<PaymentScreen> {
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, handlePaymentSuccess);
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, handlePaymentError);
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, handleExternalWallet);
+    fetchPostTitle();
+    fetchUserFullName();
+  }
+
+  void fetchPostTitle() async {
+    try {
+      DocumentSnapshot postSnapshot = await FirebaseFirestore.instance
+          .collection('posts')
+          .doc(widget.postId)
+          .get();
+      setState(() {
+        postTitle = postSnapshot['title'];
+      });
+    } catch (e) {
+      print('Error fetching post title: $e');
+    }
+  }
+
+  void fetchUserFullName() async {
+    try {
+      DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(widget.userId)
+          .get();
+      setState(() {
+        userFullName = userSnapshot['fullName'];
+      });
+    } catch (e) {
+      print('Error fetching user full name: $e');
+    }
   }
 
   void openCheckout(amount) async {
@@ -48,6 +85,42 @@ class _PaymentScreenState extends State<PaymentScreen> {
   void handlePaymentSuccess(PaymentSuccessResponse response) {
     print(response.paymentId);
     showSnackbar('Payment successful');
+
+    // Save data to Firestore
+    savePaymentData(amtController.text);
+  }
+
+  Future<void> savePaymentData(String amount) async {
+    try {
+      // Check if a document with the title already exists
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('payments')
+          .where('title', isEqualTo: postTitle)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        // If document exists, update the existing document
+        DocumentSnapshot docSnapshot = querySnapshot.docs.first;
+        String docId = docSnapshot.id;
+        await FirebaseFirestore.instance
+            .collection('payments')
+            .doc(docId)
+            .update({
+          'amount': FieldValue.increment(int.parse(amount)),
+        });
+      } else {
+        // If document doesn't exist, create a new document with the title as its ID
+        await FirebaseFirestore.instance
+            .collection('payments')
+            .doc(postTitle)
+            .set({
+          '${userFullName}': int.parse(amount),
+          // 'fullName': userFullName,
+        });
+      }
+    } catch (e) {
+      print('Error saving payment data: $e');
+    }
   }
 
   void handlePaymentError(PaymentFailureResponse response) {
@@ -64,7 +137,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        duration: Duration(seconds: 3),
+        duration: const Duration(seconds: 3),
       ),
     );
   }
@@ -152,7 +225,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   });
                 }
               },
-              icon: Icon(Icons.lock),
+              icon: const Icon(Icons.lock),
               label: const Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Text('Proceed to donate',

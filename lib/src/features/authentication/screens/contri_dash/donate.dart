@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:parvaah_helping_hand/src/constants/colors.dart';
@@ -56,6 +57,8 @@ class DonateScreen extends StatelessWidget {
                           MaterialPageRoute(
                               builder: (context) => OneScreen(
                                     postId: post.id,
+                                    userId:
+                                        FirebaseAuth.instance.currentUser!.uid,
                                   )),
                         );
                       },

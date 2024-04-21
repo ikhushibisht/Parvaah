@@ -8,7 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:parvaah_helping_hand/src/features/authentication/screens/contri_dash/drawer_screens/myProfile.dart';
+import 'package:parvaah_helping_hand/src/features/authentication/screens/contri_dash/drawer_screens/myprofile.dart';
 import 'package:parvaah_helping_hand/src/features/authentication/screens/login/login_form.dart';
 
 class DrawerScreen extends StatefulWidget {

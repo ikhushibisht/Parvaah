@@ -71,17 +71,18 @@ class _UpdatesState extends State<Updates> {
   Future<void> _uploadData() async {
     try {
       if (_imageBytes != null) {
-        final snapshot = await ref.add({
-          'title': titleController.text,
+        // Explicitly set the document name to be the title entered by the user
+        final title = titleController.text;
+        final snapshot = await ref.doc(title).set({
+          'title': title,
           'subtitle': subtitleController.text,
           'causeDetails': causeDetailsController.text,
           'totalAmount': double.parse(amountController.text),
           'collectedAmount': 0.0,
           'date': dateController.text,
         });
-        final downloadURL = await _uploadImage(snapshot.id);
-        await ref.doc(snapshot.id).update(
-            {'imageURL': downloadURL}); // Change 'imageUrl' to 'imageURL'
+        final downloadURL = await _uploadImage(title);
+        await ref.doc(title).update({'imageURL': downloadURL});
       } else {
         // Handle case when no image is selected
       }
