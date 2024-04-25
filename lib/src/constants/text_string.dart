@@ -21,7 +21,6 @@ const String tWelcomeTitle = "Your Gateway\nto\nCompassion and Impact.";
 const String tWelcomeSubtitle = "\nEmpowering You, to make a Difference.";
 
 const String tFullName = "Full Name";
-const String tEmailPhone = "Email/Phone no.";
 const String tEmail = "Email";
 const String tPassword = "Password";
 const String tPhoneNo = "Phone No.";
