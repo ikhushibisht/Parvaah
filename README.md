@@ -1,11 +1,11 @@
 # PARVAAH- A HELPING HAND
 
 A Flutter Application which has the following objectives:<br>
-• To sponsor a person and gain access to more information about the person they are sponsoring.\n
-• To donate funds for various causes and to various organizations.\n
-• To feed a hungry person and also add some custom amount.\n
-• To find real charities and set up regular donation to them.\n
-• To provide one dial medical care or some help during emergency. (Future scope)\n
+• To sponsor a person and gain access to more information about the person they are sponsoring.<br>
+• To donate funds for various causes and to various organizations.<br>
+• To feed a hungry person and also add some custom amount.<br>
+• To find real charities and set up regular donation to them.<br>
+• To provide one dial medical care or some help during emergency. (Future scope)<br>
 
 ## Getting Started
 
