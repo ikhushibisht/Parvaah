@@ -144,8 +144,8 @@ class _LoginFormState extends State<LoginForm> {
               controller: emailOrPhoneController,
               decoration: InputDecoration(
                 prefixIcon: const Icon(Icons.person_outline_outlined),
-                labelText: tEmailPhone,
-                hintText: tEmailPhone,
+                labelText: tEmail,
+                hintText: tEmail,
                 border: const OutlineInputBorder(),
                 errorText: emailOrPhoneError,
               ),
