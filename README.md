@@ -18,7 +18,7 @@ We have chosen iterative waterfall model as a part of development of the propose
 
 To conclude, Parvaah - A Helping Hand means more than the classical definition of a software application or even a non-profit organization. Instead, it emerges as a mission, which aims to shake the foundations of how we interact with social problems and encourage everyone to participate in the process of change. Via integration of Flutter for seamless cross-platform dynamic development and Firebase for strong backend support, our Parvaah solution is a powerful instrument in addressing the big issues that many abounded children and senior citizens are facing. Its unique characteristics that are reflected in sponsorship mechanisms, providing donation.<br>
 
-
-For help getting started with Flutter development, view the
+For help getting started wi![dfd](https://github.com/ikhushibisht/Parvaah/assets/139104398/067bea03-b223-4a52-9cdc-b5fe7afdb646)
+th Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
