@@ -24,9 +24,7 @@ To conclude, Parvaah - A Helping Hand means more than the classical definition o
 
 ## User Interface
 
-![home](https://github.com/ikhushibisht/Parvaah/assets/139104398/8caaa985-5b99-42d6-8d12-ad9e04fd2910) ![onbo1](https://github.com/ikhushibisht/Parvaah/assets/139104398/fff35071-4c76-4f1c-aefb-44e5aef1d703)! [onbo2](https://github.com/ikhushibisht/Parvaah/assets/139104398/2db4408d-6a9e-4e55-b731-60ffebd1069a)   ![onbo3](https://github.com/ikhushibisht/Parvaah/assets/139104398/1abd7e4d-095b-430e-ad29-62135442d78f) ![welcome](https://github.com/ikhushibisht/Parvaah/assets/139104398/f6c91233-f430-467a-91f5-71635e247515)
-
-
+![home](https://github.com/ikhushibisht/Parvaah/assets/139104398/8caaa985-5b99-42d6-8d12-ad9e04fd2910) ![onbo1](https://github.com/ikhushibisht/Parvaah/assets/139104398/fff35071-4c76-4f1c-aefb-44e5aef1d703)! [onbo2](https://github.com/ikhushibisht/Parvaah/assets/139104398/2db4408d-6a9e-4e55-b731-60ffebd1069a)   ![onbo3](https://github.com/ikhushibisht/Parvaah/assets/139104398/1abd7e4d-095b-430e-ad29-62135442d78f) ![welcome](https://github.com/ikhushibisht/Parvaah/assets/139104398/f6c91233-f430-467a-91f5-71635e247515)![contri_dash](https://github.com/ikhushibisht/Parvaah/assets/139104398/cb8d60e6-1860-420b-97da-80d221e642ee)![sponsor](https://github.com/ikhushibisht/Parvaah/assets/139104398/5503532b-a3e8-48c9-a507-de8f4ce3b1cb)![org_dash](https://github.com/ikhushibisht/Parvaah/assets/139104398/91bd9b55-16a8-447b-b979-34a5455a4a11)
 
 
 
