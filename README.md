@@ -7,14 +7,16 @@ A Flutter Application which has the following objectives:<br>
 • To find real charities and set up regular donation to them.<br>
 • To provide one dial medical care or some help during emergency. (Future scope)<br>
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+
+
+
+
+
+
+
 
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
