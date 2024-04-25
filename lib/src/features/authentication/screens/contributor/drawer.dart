@@ -2,14 +2,14 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:parvaah_helping_hand/src/constants/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:parvaah_helping_hand/src/features/authentication/screens/contri_dash/drawer_screens/myprofile.dart';
-import 'package:parvaah_helping_hand/src/features/authentication/screens/login/login_form.dart';
+import 'package:parvaah_helping_hand/src/features/authentication/screens/contributor/drawer_screens/about.dart';
+import 'package:parvaah_helping_hand/src/features/authentication/screens/contributor/drawer_screens/myprofile.dart';
+import 'package:parvaah_helping_hand/src/features/authentication/screens/welcome/welcome_sc.dart';
 
 class DrawerScreen extends StatefulWidget {
   const DrawerScreen({Key? key});
@@ -234,31 +234,32 @@ class _DrawerScreenState extends State<DrawerScreen> {
                     // Get.to(() => const MyActivityScreen());
                   },
                 ),
+                if (userData['userType'] ==
+                    'Contributor') // Check if user's role is 'contributor'
+                  ListTile(
+                    leading: const Icon(Icons.people),
+                    title: const Text('My Sponsorships'),
+                    onTap: () {
+                      // Add functionality for My Sponsorships
+                    },
+                  ),
                 ListTile(
                   leading: const Icon(Icons.settings),
                   title: const Text('Settings'),
-                  onTap: () {
-                    // Navigate to the profile screen or handle accordingly
-                    Navigator.pop(context);
-                  },
+                  onTap: () {},
                 ),
                 ListTile(
                   leading: const Icon(Icons.info),
                   title: const Text('About'),
                   onTap: () {
-                    // Navigate to the profile screen or handle accordingly
-                    Navigator.pop(context);
+                    Get.to(() => AboutScreen());
                   },
                 ),
                 ListTile(
                   leading: const Icon(Icons.logout),
                   title: const Text('LogOut'),
                   onTap: () {
-                    FirebaseAuth.instance.signOut();
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                      LoginForm.routeName,
-                      (route) => false,
-                    );
+                    _onLogout();
                   },
                 ),
               ],
@@ -267,5 +268,45 @@ class _DrawerScreenState extends State<DrawerScreen> {
         );
       },
     );
+  }
+
+  Future<void> _onLogout() async {
+    // Show confirmation dialog when log out button is pressed
+    bool logoutConfirmed = await showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Confirm Logout'),
+            content: const Text('Are you sure you want to logout?'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text('No'),
+              ),
+              TextButton(
+                onPressed: () {
+                  // Navigator.of(context)
+                  //     .popUntil(ModalRoute.withName('/welcome'));
+                  Get.offUntil(
+                    GetPageRoute(page: () => const WelcomeScreen()),
+                    ModalRoute.withName('/welcome'),
+                  );
+                },
+                child: const Text('Yes'),
+              ),
+            ],
+          ),
+        ) ??
+        false;
+
+    // // Navigate to login screen if logout is confirmed
+    // if (logoutConfirmed) {
+    //   // Navigate to the login screen
+    //   Get.offUntil(
+    //     GetPageRoute(
+    //         page: () =>
+    //             LoginForm()), // Replace LoginEmailPhone with your actual login route widget
+    //     ModalRoute.withName('/login-email-phone'),
+    //   );
+    // or any other navigation method you use
   }
 }

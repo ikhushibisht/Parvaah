@@ -34,7 +34,7 @@ class DisplaySponsorDetailsScreen extends StatelessWidget {
                     const Icon(Icons.error),
               ),
               Text(
-                'Name: ${sponsor['name']}',
+                'Name: ${sponsor.id}',
                 style:
                     const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
@@ -45,7 +45,7 @@ class DisplaySponsorDetailsScreen extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               Text(
-                'Gender: ${sponsor['sex']}',
+                'Gender: ${sponsor['Gender']}',
                 style: const TextStyle(fontSize: 17),
               ),
               const SizedBox(height: 10),
@@ -66,7 +66,12 @@ class DisplaySponsorDetailsScreen extends StatelessWidget {
               const SizedBox(height: 10),
               Text(
                 'Pincode: ${sponsor['pincode']}',
-                style: const TextStyle(fontSize: 1),
+                style: const TextStyle(fontSize: 16),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                'Amount: ₹${sponsor['amount']}',
+                style: const TextStyle(fontSize: 17),
               ),
               const SizedBox(height: 10),
               Text(

@@ -4,13 +4,12 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:parvaah_helping_hand/src/constants/sizes.dart';
 import 'package:parvaah_helping_hand/src/constants/text_string.dart';
-import 'package:parvaah_helping_hand/src/features/authentication/screens/contri_dash/dashboard.dart';
-import 'package:parvaah_helping_hand/src/features/authentication/screens/forgot_password/forgot_options/forgot_pass_model.dart';
-import 'package:parvaah_helping_hand/src/features/authentication/screens/org_dash/dashboard2.dart';
+import 'package:parvaah_helping_hand/src/features/authentication/screens/contributor/dashboard.dart';
+import 'package:parvaah_helping_hand/src/features/authentication/screens/forgot_password/forgot_pass_model.dart';
+import 'package:parvaah_helping_hand/src/features/authentication/screens/organization/dashboard2.dart';
 import 'package:parvaah_helping_hand/src/features/authentication/services/firebase_auth_methods.dart';
 
 class LoginForm extends StatefulWidget {
-  static String routeName = '/login-email-phone';
   const LoginForm({Key? key}) : super(key: key);
 
   @override
@@ -69,34 +68,34 @@ class _LoginFormState extends State<LoginForm> {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => OrganizationDashboardScreen(),
+                builder: (context) => const OrganizationDashboardScreen(),
               ),
             );
           }
         },
       );
     } else {
-      // Phone login
-      FirebaseAuthMethods(FirebaseAuth.instance)
-          .phoneSignIn(context, emailOrPhone, onLoginSuccess: (userType) {
-        if (userType == 'Contributor') {
-          // Navigate to Contributor Dashboard
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const DashboardScreen(),
-            ),
-          );
-        } else if (userType == 'Organization') {
-          // Navigate to Organization Dashboard
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => OrganizationDashboardScreen(),
-            ),
-          );
-        }
-      });
+      // // Phone login
+      // FirebaseAuthMethods(FirebaseAuth.instance)
+      //     .phoneSignIn(context, emailOrPhone, onLoginSuccess: (userType) {
+      //   if (userType == 'Contributor') {
+      //     // Navigate to Contributor Dashboard
+      //     Navigator.pushReplacement(
+      //       context,
+      //       MaterialPageRoute(
+      //         builder: (context) => const DashboardScreen(),
+      //       ),
+      //     );
+      //   } else if (userType == 'Organization') {
+      //     // Navigate to Organization Dashboard
+      //     Navigator.pushReplacement(
+      //       context,
+      //       MaterialPageRoute(
+      //         builder: (context) => OrganizationDashboardScreen(),
+      //       ),
+      //     );
+      //   }
+      // });
     }
   }
 
@@ -106,7 +105,7 @@ class _LoginFormState extends State<LoginForm> {
       builder: (BuildContext context) {
         return SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.all(20.0),
+            padding: const EdgeInsets.all(20.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -118,12 +117,12 @@ class _LoginFormState extends State<LoginForm> {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
                     Get.to(() => const ResetPasswordPage());
                   },
-                  child: Text("Reset Password using Email"),
+                  child: const Text("Reset Password using Email"),
                 ),
               ],
             ),

@@ -3,8 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:parvaah_helping_hand/src/constants/sizes.dart';
 import 'package:parvaah_helping_hand/src/constants/text_string.dart';
-import 'package:parvaah_helping_hand/src/features/authentication/screens/contri_dash/dashboard.dart';
-import 'package:parvaah_helping_hand/src/features/authentication/screens/org_dash/dashboard2.dart';
+import 'package:parvaah_helping_hand/src/features/authentication/screens/contributor/dashboard.dart';
+import 'package:parvaah_helping_hand/src/features/authentication/screens/organization/dashboard2.dart';
 import 'package:parvaah_helping_hand/src/features/authentication/services/firebase_auth_methods.dart';
 
 class SignUpFormWidget extends StatefulWidget {

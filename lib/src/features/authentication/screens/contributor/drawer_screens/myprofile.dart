@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:parvaah_helping_hand/src/constants/colors.dart';
-import 'package:parvaah_helping_hand/src/features/authentication/screens/contri_dash/drawer_screens/editprofile.dart';
+import 'package:parvaah_helping_hand/src/features/authentication/screens/contributor/drawer_screens/editprofile.dart';
 
 class MyProfileScreen extends StatefulWidget {
   const MyProfileScreen({Key? key}) : super(key: key);

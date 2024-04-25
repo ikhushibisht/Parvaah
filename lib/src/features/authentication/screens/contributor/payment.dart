@@ -93,33 +93,53 @@ class _PaymentScreenState extends State<PaymentScreen> {
   Future<void> savePaymentData(String amount) async {
     try {
       // Check if a document with the title already exists
-      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-          .collection('payments')
-          .where('title', isEqualTo: postTitle)
-          .get();
+      DocumentReference paymentRef =
+          FirebaseFirestore.instance.collection('payments').doc(postTitle);
 
-      if (querySnapshot.docs.isNotEmpty) {
+      DocumentSnapshot docSnapshot = await paymentRef.get();
+
+      if (docSnapshot.exists) {
         // If document exists, update the existing document
-        DocumentSnapshot docSnapshot = querySnapshot.docs.first;
-        String docId = docSnapshot.id;
-        await FirebaseFirestore.instance
-            .collection('payments')
-            .doc(docId)
-            .update({
-          'amount': FieldValue.increment(int.parse(amount)),
+        Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
+
+        // Get the current collected amount
+        int currentCollectedAmount = data['collectedAmount'] ?? 0;
+
+        // Get the current user's donation amount, if any
+        int userDonationAmount = data[userFullName] ?? 0;
+
+        // Update the collected amount by adding the new payment amount
+        await paymentRef.update({
+          'collectedAmount': currentCollectedAmount + int.parse(amount),
+          // Store individual user donations separately without overwriting
+          '${userFullName}': userDonationAmount + int.parse(amount),
         });
       } else {
         // If document doesn't exist, create a new document with the title as its ID
-        await FirebaseFirestore.instance
-            .collection('payments')
-            .doc(postTitle)
-            .set({
+        await paymentRef.set({
+          // Set the initial collected amount as the new payment amount
+          'collectedAmount': int.parse(amount),
+          // Store individual user donations separately
           '${userFullName}': int.parse(amount),
-          // 'fullName': userFullName,
         });
+        // Update the collected amount in the posts collection
+        await updatePostsCollection(postTitle, double.parse(amount));
       }
     } catch (e) {
       print('Error saving payment data: $e');
+    }
+  }
+
+  Future<void> updatePostsCollection(
+      String postId, double collectedAmount) async {
+    try {
+      // Update the collected amount in the posts collection
+      await FirebaseFirestore.instance
+          .collection('posts')
+          .doc(postId)
+          .update({'collectedAmount': collectedAmount});
+    } catch (e) {
+      print('Error updating posts collection: $e');
     }
   }
 

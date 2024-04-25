@@ -3,11 +3,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:parvaah_helping_hand/src/constants/colors.dart';
-import 'package:parvaah_helping_hand/src/features/authentication/screens/contri_dash/donate.dart';
-import 'package:parvaah_helping_hand/src/features/authentication/screens/contri_dash/donation_dashboard/oneScreen.dart';
-import 'package:parvaah_helping_hand/src/features/authentication/screens/contri_dash/drawer.dart';
-import 'package:parvaah_helping_hand/src/features/authentication/screens/contri_dash/events.dart';
-import 'package:parvaah_helping_hand/src/features/authentication/screens/contri_dash/sponsor.dart';
+import 'package:parvaah_helping_hand/src/features/authentication/screens/contributor/donate.dart';
+import 'package:parvaah_helping_hand/src/features/authentication/screens/contributor/drawer.dart';
+import 'package:parvaah_helping_hand/src/features/authentication/screens/contributor/events.dart';
+import 'package:parvaah_helping_hand/src/features/authentication/screens/contributor/oneScreen.dart';
+import 'package:parvaah_helping_hand/src/features/authentication/screens/contributor/sponsor.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({Key? key}) : super(key: key);
@@ -26,6 +26,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: _currentIndex);
+    _pageController
+        .addListener(_pageListener); // Add listener to track page changes
+  }
+
+  @override
+  void dispose() {
+    _pageController.removeListener(_pageListener);
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  void _pageListener() {
+    setState(() {
+      _currentIndex = _pageController.page!.round();
+    });
   }
 
   @override
@@ -34,107 +49,132 @@ class _DashboardScreenState extends State<DashboardScreen> {
     var brightness = mediaQuery.platformBrightness;
     final isDarkMode = brightness == Brightness.dark;
 
-    return Scaffold(
-      key: _scaffoldKey,
-      backgroundColor: isDarkMode ? tAccentColor : tDashboardBg,
-      appBar: AppBar(
-        backgroundColor: isDarkMode ? tPrimaryColor : tBgColor,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(
-            Icons.menu_open_sharp,
-            color: Colors.white,
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        key: _scaffoldKey,
+        backgroundColor: isDarkMode ? tAccentColor : tDashboardBg,
+        appBar: AppBar(
+          backgroundColor: isDarkMode ? tPrimaryColor : tBgColor,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(
+              Icons.menu_open_sharp,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              _scaffoldKey.currentState!.openDrawer();
+            },
           ),
-          onPressed: () {
-            _scaffoldKey.currentState!.openDrawer();
-          },
+          systemOverlayStyle: SystemUiOverlayStyle.dark,
         ),
-        systemOverlayStyle: SystemUiOverlayStyle.dark,
-      ),
-      drawer: const DrawerScreen(),
-      body: ListView(
-        children: [
-          SizedBox(
-            height: mediaQuery.size.height,
-            child: PageView(
-              controller: _pageController,
-              physics: const NeverScrollableScrollPhysics(),
-              children: [
-                DashboardScreenContent(
-                  pageController: _pageController,
-                  onJumpToDonate: _jumpToDonate,
-                  onJumpToEvents: _jumpToEvents,
-                ),
-                const DonateScreen(),
-                const EventsScreen(),
-              ],
+        drawer: const DrawerScreen(),
+        body: ListView(
+          children: [
+            SizedBox(
+              height: mediaQuery.size.height,
+              child: PageView(
+                controller: _pageController,
+                physics: const ClampingScrollPhysics(),
+                children: [
+                  DashboardScreenContent(
+                    pageController: _pageController,
+                    onJumpToDonate: _jumpToDonate,
+                    onJumpToEvents: _jumpToEvents,
+                  ),
+                  const DonateScreen(),
+                  const EventsScreen(),
+                ],
+              ),
             ),
-          ),
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-            _pageController.animateToPage(
-              index,
-              duration: const Duration(milliseconds: 500),
-              curve: Curves.easeInOutQuart,
+          ],
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: _currentIndex,
+          onTap: (index) {
+            setState(() {
+              _currentIndex = index;
+              _pageController.animateToPage(
+                index,
+                duration: const Duration(milliseconds: 500),
+                curve: Curves.easeInOutQuart,
+              );
+            });
+          },
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.volunteer_activism),
+              label: 'Volunteer',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.event),
+              label: 'Events',
+            ),
+          ],
+          backgroundColor: isDarkMode ? tPrimaryColor : Colors.white,
+          selectedItemColor: isDarkMode ? Colors.amber : tPrimaryColor,
+          unselectedItemColor: isDarkMode
+              ? Colors.white
+              : const Color.fromARGB(255, 152, 118, 157),
+        ),
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const SponsorPersonScreen(),
+              ),
             );
-          });
-        },
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.volunteer_activism),
-            label: 'Volunteer',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.event),
-            label: 'Events',
-          ),
-        ],
-        backgroundColor: isDarkMode ? tPrimaryColor : Colors.white,
-        selectedItemColor: isDarkMode
-            ? Colors.amber
-            : tPrimaryColor, // Set selected item color
-        unselectedItemColor: isDarkMode
-            ? Colors.white
-            : const Color.fromARGB(
-                255, 152, 118, 157), // Set unselected item color
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const SponsorPersonScreen(),
+          },
+          label: Text(
+            'Sponsor a Person',
+            style: TextStyle(
+              color: isDarkMode ? Colors.white : Colors.black,
             ),
-          );
-        },
-        label: Text(
-          'Sponsor a Person',
-          style: TextStyle(
+          ),
+          icon: Icon(
+            Icons.person_add_alt,
             color: isDarkMode ? Colors.white : Colors.black,
           ),
+          backgroundColor: isDarkMode ? tPrimaryColor : tBgColor,
         ),
-        icon: Icon(
-          Icons.person_add_alt,
-          color: isDarkMode ? Colors.white : Colors.black,
-        ),
-        backgroundColor: isDarkMode ? tPrimaryColor : tBgColor,
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
+  }
+
+  Future<bool> _onWillPop() async {
+    // Show confirmation dialog when back button is pressed
+    return await showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Confirm Logout'),
+            content: Text('Are you sure you want to logout?'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: Text('No'),
+              ),
+              TextButton(
+                onPressed: () {
+                  // Perform logout action here
+                  Navigator.of(context).pop(true);
+                },
+                child: Text('Yes'),
+              ),
+            ],
+          ),
+        ) ??
+        false; // Return false to prevent route from being popped
   }
 
   void _jumpToDonate() {
     setState(() {
-      _currentIndex = 1; // Index 1 corresponds to DonateScreen
+      _currentIndex = 1;
       _pageController.animateToPage(
         1,
         duration: const Duration(milliseconds: 500),
@@ -145,7 +185,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   void _jumpToEvents() {
     setState(() {
-      _currentIndex = 2; // Index 1 corresponds to DonateScreen
+      _currentIndex = 2;
       _pageController.animateToPage(
         2,
         duration: const Duration(milliseconds: 500),

@@ -1,4 +1,4 @@
-import 'package:parvaah_helping_hand/src/features/authentication/screens/org_dash/dashboard2.dart';
+import 'package:parvaah_helping_hand/src/features/authentication/screens/organization/dashboard2.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 

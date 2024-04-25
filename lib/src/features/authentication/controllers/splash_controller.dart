@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:parvaah_helping_hand/src/features/authentication/screens/onbo_screen/onbo_sc.dart';
+import 'package:parvaah_helping_hand/src/features/authentication/screens/welcome/onbo_sc.dart';
 
 class SplashScreenController
 // extends GetxController

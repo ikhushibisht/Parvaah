@@ -1,11 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/get_navigation.dart';
 import 'package:parvaah_helping_hand/src/constants/colors.dart';
-import 'package:parvaah_helping_hand/src/features/authentication/screens/contri_dash/drawer.dart';
-import 'package:parvaah_helping_hand/src/features/authentication/screens/org_dash/display.dart';
-import 'package:parvaah_helping_hand/src/features/authentication/screens/org_dash/getupdates.dart';
-import 'package:parvaah_helping_hand/src/features/authentication/screens/org_dash/addupdates.dart';
+import 'package:parvaah_helping_hand/src/features/authentication/screens/contributor/drawer.dart';
+import 'package:parvaah_helping_hand/src/features/authentication/screens/organization/addevents.dart';
+import 'package:parvaah_helping_hand/src/features/authentication/screens/organization/displaypost.dart';
+import 'package:parvaah_helping_hand/src/features/authentication/screens/organization/getupdates.dart';
+import 'package:parvaah_helping_hand/src/features/authentication/screens/organization/addupdates.dart';
+import 'package:parvaah_helping_hand/src/features/authentication/screens/organization/postevents.dart';
 
 class OrganizationDashboardScreen extends StatefulWidget {
   const OrganizationDashboardScreen({Key? key}) : super(key: key);
@@ -34,91 +38,148 @@ class _OrganizationDashboardScreenState
     var brightness = mediaQuery.platformBrightness;
     final isDarkMode = brightness == Brightness.dark;
 
-    return Scaffold(
-      key: _scaffoldKey,
-      backgroundColor: isDarkMode ? tAccentColor : tDashboardBg,
-      appBar: AppBar(
-        backgroundColor: isDarkMode ? tPrimaryColor : tBgColor,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(
-            Icons.menu_open_sharp,
-            color: Colors.white,
-          ),
-          onPressed: () {
-            _scaffoldKey.currentState!.openDrawer();
-          },
-        ),
-        systemOverlayStyle: SystemUiOverlayStyle.dark,
-      ),
-      drawer: const DrawerScreen(),
-      body: ListView(
-        children: [
-          SizedBox(
-            height: mediaQuery.size.height,
-            child: PageView(
-              controller: _pageController,
-              physics: const NeverScrollableScrollPhysics(),
-              children: [
-                OrgDashScreenContent(
-                  pageController: _pageController,
-                  onJumpToUpdates: _jumpToUpdates,
-                ),
-                const Getupdates(),
-              ],
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        key: _scaffoldKey,
+        backgroundColor: isDarkMode ? tAccentColor : tDashboardBg,
+        appBar: AppBar(
+          backgroundColor: isDarkMode ? tPrimaryColor : tBgColor,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(
+              Icons.menu_open_sharp,
+              color: Colors.white,
             ),
+            onPressed: () {
+              _scaffoldKey.currentState!.openDrawer();
+            },
           ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => Updates()),
-          );
-        },
-        backgroundColor: const Color.fromARGB(255, 244, 243, 243),
-        child: const Icon(Icons.add), // Set your preferred button color
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-            _pageController.animateToPage(
-              index,
-              duration: const Duration(milliseconds: 500),
-              curve: Curves.easeInOutQuart,
-            );
-          });
-        },
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.post_add),
-            label: 'Posts',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.upload),
-            label: 'Updates',
-          ),
-        ],
-        backgroundColor: isDarkMode ? tPrimaryColor : Colors.white,
-        selectedItemColor: isDarkMode
-            ? Colors.amber
-            : tPrimaryColor, // Set selected item color
-        unselectedItemColor: isDarkMode
-            ? Colors.white
-            : const Color.fromARGB(
-                255, 152, 118, 157), // Set unselected item color
+          systemOverlayStyle: SystemUiOverlayStyle.dark,
+        ),
+        drawer: const DrawerScreen(),
+        body: ListView(
+          children: [
+            SizedBox(
+              height: mediaQuery.size.height,
+              child: PageView(
+                controller: _pageController,
+                physics: const ClampingScrollPhysics(),
+                children: [
+                  OrgDashScreenContent(
+                    pageController: _pageController,
+                    onJumpToUpdates: _jumpToUpdates,
+                    onJumpToEvents: _jumpToEvents,
+                  ),
+                  const PostEvents(),
+                  const Getupdates(),
+                ],
+              ),
+            ),
+          ],
+        ),
+        floatingActionButton: _buildFloatingActionButton(),
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: _currentIndex,
+          onTap: (index) {
+            setState(() {
+              _currentIndex = index;
+              _pageController.animateToPage(
+                index,
+                duration: const Duration(milliseconds: 500),
+                curve: Curves.easeInOutQuart,
+              );
+            });
+          },
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.post_add),
+              label: 'Posts',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.event),
+              label: 'Events',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.upload),
+              label: 'Updates',
+            ),
+          ],
+          backgroundColor: isDarkMode ? tPrimaryColor : Colors.white,
+          selectedItemColor: isDarkMode
+              ? Colors.amber
+              : tPrimaryColor, // Set selected item color
+          unselectedItemColor: isDarkMode
+              ? Colors.white
+              : const Color.fromARGB(
+                  255, 152, 118, 157), // Set unselected item color
+        ),
       ),
     );
   }
 
-  void _jumpToUpdates() {
+  FloatingActionButton _buildFloatingActionButton() {
+    if (_currentIndex == 0 || _currentIndex == 1) {
+      return FloatingActionButton(
+        onPressed: () {
+          if (_currentIndex == 0) {
+            Get.to(Updates());
+          } else if (_currentIndex == 1) {
+            Get.to(const addEvents());
+          }
+        },
+        backgroundColor: const Color.fromARGB(255, 244, 243, 243),
+        child: const Icon(Icons.add),
+      );
+    } else {
+      return const FloatingActionButton(
+        onPressed: null, // No action for Getupdates screen
+        backgroundColor: Colors.transparent,
+      );
+    }
+  }
+
+  Future<bool> _onWillPop() async {
+    // Show confirmation dialog when back button is pressed
+    return await showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Confirm Logout'),
+            content: const Text('Are you sure you want to logout?'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text('No'),
+              ),
+              TextButton(
+                onPressed: () {
+                  // Perform logout action here
+                  Navigator.of(context).pop(true);
+                },
+                child: const Text('Yes'),
+              ),
+            ],
+          ),
+        ) ??
+        false; // Return false to prevent route from being popped
+  }
+
+  void _jumpToEvents() {
     setState(() {
-      _currentIndex = 1; // Index 1 corresponds to DonateScreen
+      _currentIndex = 1; // Index 1 corresponds to EventsScreen
       _pageController.animateToPage(
         1,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOutQuart,
+      );
+    });
+  }
+
+  void _jumpToUpdates() {
+    setState(() {
+      _currentIndex = 2; // Index 2 corresponds to Getupdates screen
+      _pageController.animateToPage(
+        2,
         duration: const Duration(milliseconds: 500),
         curve: Curves.easeInOutQuart,
       );
@@ -129,11 +190,13 @@ class _OrganizationDashboardScreenState
 class OrgDashScreenContent extends StatelessWidget {
   final PageController pageController;
   final VoidCallback onJumpToUpdates;
+  final VoidCallback onJumpToEvents;
 
   const OrgDashScreenContent({
     Key? key,
     required this.pageController,
     required this.onJumpToUpdates,
+    required this.onJumpToEvents,
   }) : super(key: key);
 
   @override

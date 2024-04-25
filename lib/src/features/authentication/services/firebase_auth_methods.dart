@@ -2,8 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:parvaah_helping_hand/src/features/authentication/screens/contri_dash/dashboard.dart';
-import 'package:parvaah_helping_hand/src/features/authentication/screens/forgot_password/forgot_otp/showOTPDialog.dart';
+import 'package:parvaah_helping_hand/src/features/authentication/screens/contributor/dashboard.dart';
 import 'package:parvaah_helping_hand/src/features/authentication/services/showSnackBar.dart';
 
 class FirebaseAuthMethods {
@@ -140,50 +139,50 @@ class FirebaseAuthMethods {
     }
   }
 
-  // Phone sign in
-  Future<void> phoneSignIn(BuildContext context, String phoneNumber,
-      {required Null Function(dynamic userType) onLoginSuccess}) async {
-    TextEditingController codeController = TextEditingController();
+  // // Phone sign in
+  // Future<void> phoneSignIn(BuildContext context, String phoneNumber,
+  //     {required Null Function(dynamic userType) onLoginSuccess}) async {
+  //   TextEditingController codeController = TextEditingController();
 
-    await _auth.verifyPhoneNumber(
-      phoneNumber: phoneNumber,
-      verificationCompleted: (PhoneAuthCredential credential) async {
-        await _auth.signInWithCredential(credential);
-        // Navigate to Dashboard after successful phone sign-in
-        // Get user data from Firestore to determine user type
-        DocumentSnapshot userSnapshot =
-            await usersCollection.doc(_auth.currentUser!.uid).get();
-        String userType = userSnapshot['userType'];
+  //   await _auth.verifyPhoneNumber(
+  //     phoneNumber: phoneNumber,
+  //     verificationCompleted: (PhoneAuthCredential credential) async {
+  //       await _auth.signInWithCredential(credential);
+  //       // Navigate to Dashboard after successful phone sign-in
+  //       // Get user data from Firestore to determine user type
+  //       DocumentSnapshot userSnapshot =
+  //           await usersCollection.doc(_auth.currentUser!.uid).get();
+  //       String userType = userSnapshot['userType'];
 
-        onLoginSuccess(userType); // Call callback with user type
-      },
-      verificationFailed: (e) {
-        showSnackbar(context, e.message!);
-      },
-      codeSent: ((String verificationId, int? resendToken) async {
-        showOTPDialog(
-          codeController: codeController,
-          context: context,
-          onPressed: () async {
-            PhoneAuthCredential credential = PhoneAuthProvider.credential(
-              verificationId: verificationId,
-              smsCode: codeController.text.trim(),
-            );
+  //       onLoginSuccess(userType); // Call callback with user type
+  //     },
+  //     verificationFailed: (e) {
+  //       showSnackbar(context, e.message!);
+  //     },
+  //     codeSent: ((String verificationId, int? resendToken) async {
+  //       showOTPDialog(
+  //         codeController: codeController,
+  //         context: context,
+  //         onPressed: () async {
+  //           PhoneAuthCredential credential = PhoneAuthProvider.credential(
+  //             verificationId: verificationId,
+  //             smsCode: codeController.text.trim(),
+  //           );
 
-            await _auth.signInWithCredential(credential);
-            // Navigate to Dashboard after successful phone sign-in
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const DashboardScreen(),
-              ),
-            );
-          },
-        );
-      }),
-      codeAutoRetrievalTimeout: (String verificationId) {},
-    );
-  }
+  //           await _auth.signInWithCredential(credential);
+  //           // Navigate to Dashboard after successful phone sign-in
+  //           Navigator.pushReplacement(
+  //             context,
+  //             MaterialPageRoute(
+  //               builder: (context) => const DashboardScreen(),
+  //             ),
+  //           );
+  //         },
+  //       );
+  //     }),
+  //     codeAutoRetrievalTimeout: (String verificationId) {},
+  //   );
+  // }
 
 // Reset Password with Email
   Future<void> resetPasswordWithEmail(

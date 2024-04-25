@@ -6,7 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:parvaah_helping_hand/src/constants/colors.dart';
-import 'package:parvaah_helping_hand/src/features/authentication/screens/org_dash/dashboard2.dart';
+import 'package:parvaah_helping_hand/src/features/authentication/screens/organization/dashboard2.dart';
 
 class Updates extends StatefulWidget {
   Updates({Key? key}) : super(key: key);
@@ -78,7 +78,6 @@ class _UpdatesState extends State<Updates> {
           'subtitle': subtitleController.text,
           'causeDetails': causeDetailsController.text,
           'totalAmount': double.parse(amountController.text),
-          'collectedAmount': 0.0,
           'date': dateController.text,
         });
         final downloadURL = await _uploadImage(title);
@@ -99,10 +98,11 @@ class _UpdatesState extends State<Updates> {
   }
 
   Future<void> _selectDate(BuildContext context) async {
+    final DateTime now = DateTime.now();
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
+      initialDate: now,
+      firstDate: now, // Set the first selectable date to the current date
       lastDate: DateTime(2101),
     );
     if (picked != null) {
@@ -121,13 +121,13 @@ class _UpdatesState extends State<Updates> {
     return Scaffold(
       backgroundColor: isDarkMode ? tAccentColor : tDashboardBg,
       appBar: AppBar(
-        title: const Text("Upload an Event"),
+        title: const Text("Upload Cause"),
         backgroundColor: isDarkMode ? tPrimaryColor : tBgColor,
         actions: [
           MaterialButton(
             onPressed: () async {
               await _uploadData();
-              Navigator.pushReplacement(
+              Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (_) => const OrganizationDashboardScreen(),

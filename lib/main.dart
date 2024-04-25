@@ -5,9 +5,12 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:get/get_navigation/src/routes/transitions_type.dart';
 import 'package:parvaah_helping_hand/firebase_options.dart';
-import 'package:parvaah_helping_hand/src/features/authentication/screens/splash_screen/splash_screen.dart';
+import 'package:parvaah_helping_hand/src/features/authentication/screens/login/login_screen.dart';
+import 'package:parvaah_helping_hand/src/features/authentication/screens/organization/dashboard2.dart';
+import 'package:parvaah_helping_hand/src/features/authentication/screens/welcome/splash_screen.dart';
+import 'package:parvaah_helping_hand/src/features/authentication/screens/welcome/welcome_sc.dart';
 import 'package:parvaah_helping_hand/src/utils/theme/theme.dart';
-import 'package:parvaah_helping_hand/src/features/authentication/screens/contri_dash/dashboard.dart';
+import 'package:parvaah_helping_hand/src/features/authentication/screens/contributor/dashboard.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,9 +42,14 @@ class App extends StatelessWidget {
       getPages: [
         GetPage(name: SplashScreen.routeName, page: () => const SplashScreen()),
         GetPage(
+            name: WelcomeScreen.routeName, page: () => const WelcomeScreen()),
+        GetPage(name: LoginScreen.routeName, page: () => const LoginScreen()),
+        GetPage(
             name: DashboardScreen.routeName,
             page: () => const DashboardScreen()),
-        // Add more pages/routes as needed
+        GetPage(
+            name: OrganizationDashboardScreen.routeName,
+            page: () => const OrganizationDashboardScreen()),
       ],
     );
   }

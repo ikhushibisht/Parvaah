@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:parvaah_helping_hand/src/constants/colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:parvaah_helping_hand/src/features/authentication/screens/contri_dash/donation_dashboard/oneScreen.dart';
+import 'package:parvaah_helping_hand/src/features/authentication/screens/contributor/oneScreen.dart';
 
 class DonateScreen extends StatelessWidget {
   const DonateScreen({Key? key}) : super(key: key);
@@ -92,6 +92,7 @@ class _CustomAppBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           AppBar(
+            automaticallyImplyLeading: false,
             backgroundColor: Colors.transparent,
             leadingWidth: 28,
             toolbarHeight: 150,

@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:parvaah_helping_hand/src/constants/colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:parvaah_helping_hand/src/features/authentication/screens/contri_dash/donation_dashboard/payment.dart';
+import 'package:parvaah_helping_hand/src/features/authentication/screens/contributor/payment.dart';
 
 class OneScreen extends StatefulWidget {
   final String postId;
@@ -71,30 +71,25 @@ class _OneScreenState extends State<OneScreen>
 
   Future<void> _fetchCollectedAmount() async {
     try {
-      // Fetch the post document from the Firestore
-      DocumentSnapshot postSnapshot = await FirebaseFirestore.instance
-          .collection('posts')
+      // Fetch the payment document using the same document ID as the post
+      DocumentSnapshot paymentSnapshot = await FirebaseFirestore.instance
+          .collection('payments')
           .doc(widget.postId)
           .get();
 
-      // Retrieve the title of the post
-      String postTitle = postSnapshot['title'];
+      // Ensure that the payment document exists
+      if (paymentSnapshot.exists) {
+        // Get the collected amount from the payment document
+        dynamic collectedAmountValue = paymentSnapshot['collectedAmount'];
+        // Convert the fetched value to double
+        double collectedAmount = collectedAmountValue is int
+            ? collectedAmountValue.toDouble()
+            : collectedAmountValue;
 
-      // Query payments where the postId matches the postTitle
-      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-          .collection('payments')
-          .where('postId', isEqualTo: postTitle)
-          .get();
-
-      double totalCollected = 0.0;
-      querySnapshot.docs.forEach((doc) {
-        // Sum up all the payment amounts related to the post
-        totalCollected += double.parse(doc['amount'].toString());
-      });
-
-      setState(() {
-        collectedAmount = totalCollected;
-      });
+        setState(() {
+          this.collectedAmount = collectedAmount;
+        });
+      }
     } catch (e) {
       print('Error fetching collected amount: $e');
     }
@@ -239,7 +234,6 @@ class _OneScreenState extends State<OneScreen>
                     ),
                   ),
                   const SizedBox(height: 10),
-                  // Text showing the amount collected
                   Text(
                     'Collected: ₹${collectedAmount.toString()}',
                     style: TextStyle(

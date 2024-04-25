@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:parvaah_helping_hand/src/constants/colors.dart';
 import 'package:parvaah_helping_hand/src/constants/sizes.dart';
-import 'package:parvaah_helping_hand/src/features/authentication/models/model_onbo.dart';
+import 'package:parvaah_helping_hand/src/features/authentication/controllers/model_onbo.dart';
 
 class OnBoardingPageWidget extends StatelessWidget {
   const OnBoardingPageWidget({

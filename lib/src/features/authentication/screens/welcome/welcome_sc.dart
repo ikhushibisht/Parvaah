@@ -10,6 +10,7 @@ import 'package:parvaah_helping_hand/src/features/authentication/screens/login/l
 import 'package:parvaah_helping_hand/src/features/authentication/screens/signup/signup_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
+  static String routeName = '/welcome';
   const WelcomeScreen({Key? key}) : super(key: key);
 
   @override
