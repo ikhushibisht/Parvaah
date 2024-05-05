@@ -9,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:parvaah_helping_hand/src/features/authentication/screens/contributor/drawer_screens/about.dart';
 import 'package:parvaah_helping_hand/src/features/authentication/screens/contributor/drawer_screens/myprofile.dart';
+import 'package:parvaah_helping_hand/src/features/authentication/screens/contributor/drawer_screens/mysponsorship.dart';
 import 'package:parvaah_helping_hand/src/features/authentication/screens/welcome/welcome_sc.dart';
 
 class DrawerScreen extends StatefulWidget {
@@ -240,14 +241,9 @@ class _DrawerScreenState extends State<DrawerScreen> {
                     leading: const Icon(Icons.people),
                     title: const Text('My Sponsorships'),
                     onTap: () {
-                      // Add functionality for My Sponsorships
+                      Get.to(() => SponsorshipDetailsPage());
                     },
                   ),
-                ListTile(
-                  leading: const Icon(Icons.settings),
-                  title: const Text('Settings'),
-                  onTap: () {},
-                ),
                 ListTile(
                   leading: const Icon(Icons.info),
                   title: const Text('About'),
@@ -272,7 +268,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
 
   Future<void> _onLogout() async {
     // Show confirmation dialog when log out button is pressed
-    bool logoutConfirmed = await showDialog<bool>(
+    await showDialog<bool>(
           context: context,
           builder: (context) => AlertDialog(
             title: const Text('Confirm Logout'),
@@ -297,16 +293,5 @@ class _DrawerScreenState extends State<DrawerScreen> {
           ),
         ) ??
         false;
-
-    // // Navigate to login screen if logout is confirmed
-    // if (logoutConfirmed) {
-    //   // Navigate to the login screen
-    //   Get.offUntil(
-    //     GetPageRoute(
-    //         page: () =>
-    //             LoginForm()), // Replace LoginEmailPhone with your actual login route widget
-    //     ModalRoute.withName('/login-email-phone'),
-    //   );
-    // or any other navigation method you use
   }
 }

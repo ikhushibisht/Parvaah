@@ -51,6 +51,8 @@ class EventGridView extends StatelessWidget {
               imageURL: event['imageURL'],
               date: event['date'],
               docId: event.id,
+              venue: event['venue'],
+              time: event['time'],
             );
           },
         );
@@ -61,13 +63,17 @@ class EventGridView extends StatelessWidget {
 
 class EventCard extends StatelessWidget {
   final String imageURL;
-  final String date;
   final String docId;
+  final String date;
+  final String venue;
+  final String time;
 
   const EventCard({
     required this.imageURL,
-    required this.date,
     required this.docId,
+    required this.date,
+    required this.venue,
+    required this.time,
   });
 
   @override
@@ -75,35 +81,69 @@ class EventCard extends StatelessWidget {
     return Card(
       elevation: 3,
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Image.network(
-            imageURL,
-            fit: BoxFit.cover,
-            height: 150, // Adjust as needed
+          Flexible(
+            flex: 1,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: FittedBox(
+                fit: BoxFit.cover,
+                child: Image.network(
+                  imageURL,
+                  width: 150,
+                  height: 150,
+                ),
+              ),
+            ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  docId,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+          Expanded(
+            flex: 2,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    docId,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  date,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey,
+                  const SizedBox(height: 4),
+                  Text(
+                    date,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey,
+                    ),
                   ),
-                ),
-              ],
+                  const SizedBox(height: 4),
+                  Text(
+                    'Venue: $venue',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: Colors.black,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Time: $time',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: Colors.black,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
             ),
           ),
         ],

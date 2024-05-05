@@ -1,12 +1,52 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:parvaah_helping_hand/src/constants/colors.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class DisplaySponsorDetailsScreen extends StatelessWidget {
+class DisplaySponsorDetailsScreen extends StatefulWidget {
   final DocumentSnapshot sponsor;
 
   const DisplaySponsorDetailsScreen({Key? key, required this.sponsor})
       : super(key: key);
+
+  @override
+  _DisplaySponsorDetailsScreenState createState() =>
+      _DisplaySponsorDetailsScreenState();
+}
+
+class _DisplaySponsorDetailsScreenState
+    extends State<DisplaySponsorDetailsScreen> {
+  bool _isAccepted = false;
+  bool _isDeclined = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkSponsorshipStatus();
+  }
+
+  void _checkSponsorshipStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // Check if the sponsorship has been accepted or declined
+    setState(() {
+      _isAccepted = prefs.getBool('${widget.sponsor.id}_accepted') ?? false;
+      _isDeclined = prefs.getBool('${widget.sponsor.id}_declined') ?? false;
+    });
+  }
+
+  void _acceptSponsorship() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // Save the acceptance status
+    await prefs.setBool('${widget.sponsor.id}_accepted', true);
+    // Update UI
+    setState(() {
+      _isAccepted = true;
+      _isDeclined = false;
+    });
+    // Show snackbar
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text('Accepted')));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,61 +64,95 @@ class DisplaySponsorDetailsScreen extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(90.0),
+          padding: const EdgeInsets.all(20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Image.network(
-                sponsor['image_url'],
+                widget.sponsor['image_url'],
                 errorBuilder: (context, error, stackTrace) =>
                     const Icon(Icons.error),
               ),
               Text(
-                'Name: ${sponsor.id}',
+                'Name: ${widget.sponsor.id}',
                 style:
                     const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10),
               Text(
-                'Age: ${sponsor['age']}',
+                'Age: ${widget.sponsor['age']}',
                 style: const TextStyle(fontSize: 17),
               ),
               const SizedBox(height: 10),
               Text(
-                'Gender: ${sponsor['Gender']}',
+                'Gender: ${widget.sponsor['Gender']}',
                 style: const TextStyle(fontSize: 17),
               ),
               const SizedBox(height: 10),
               Text(
-                'Address: ${sponsor['address']}',
+                'Address: ${widget.sponsor['address']}',
                 style: const TextStyle(fontSize: 17),
               ),
               const SizedBox(height: 10),
               Text(
-                'City: ${sponsor['city']}',
+                'City: ${widget.sponsor['city']}',
                 style: const TextStyle(fontSize: 17),
               ),
               const SizedBox(height: 10),
               Text(
-                'State: ${sponsor['state']}',
+                'State: ${widget.sponsor['state']}',
                 style: const TextStyle(fontSize: 17),
               ),
               const SizedBox(height: 10),
               Text(
-                'Pincode: ${sponsor['pincode']}',
+                'Pincode: ${widget.sponsor['pincode']}',
                 style: const TextStyle(fontSize: 16),
               ),
               const SizedBox(height: 10),
               Text(
-                'Amount: ₹${sponsor['amount']}',
+                'Amount: ₹${widget.sponsor['amount']}',
                 style: const TextStyle(fontSize: 17),
               ),
               const SizedBox(height: 10),
               Text(
-                'Sponsored by: ${sponsor['sponsored_by']}',
+                'Sponsored by: ${widget.sponsor['sponsored_by']}',
                 style:
                     const TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
               ),
+              const SizedBox(height: 20),
+              if (!_isAccepted && !_isDeclined)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                      onPressed: _acceptSponsorship,
+                      child: Text('Accept'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(SnackBar(content: Text('Declined')));
+                        setState(() {
+                          _isAccepted = false;
+                          _isDeclined = true;
+                        });
+                      },
+                      child: Text('Decline'),
+                    ),
+                  ],
+                ),
+              if (_isAccepted || _isDeclined)
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    _isAccepted ? 'Accepted' : 'Declined',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: _isAccepted ? Colors.green : Colors.red,
+                    ),
+                  ),
+                ),
             ],
           ),
         ),

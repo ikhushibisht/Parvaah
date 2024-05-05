@@ -393,7 +393,7 @@ class _SponsorPersonScreenState extends State<SponsorPersonScreen> {
           userSnapshot.data() as Map<String, dynamic>?;
 
       // Access the 'fullName' field from the userData map
-      String fullName = userData?['fullName'] ?? 'Unknown';
+      String fullName = userData?['email'] ?? 'Unknown';
 
       return fullName;
     } else {

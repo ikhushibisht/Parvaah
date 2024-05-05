@@ -11,9 +11,13 @@ import 'package:parvaah_helping_hand/src/features/authentication/screens/welcome
 import 'package:parvaah_helping_hand/src/features/authentication/screens/welcome/welcome_sc.dart';
 import 'package:parvaah_helping_hand/src/utils/theme/theme.dart';
 import 'package:parvaah_helping_hand/src/features/authentication/screens/contributor/dashboard.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences.getInstance().then((prefs) {
+    runApp(App(prefs: prefs));
+  });
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -22,12 +26,11 @@ Future<void> main() async {
     androidProvider: AndroidProvider.debug,
     appleProvider: AppleProvider.appAttest,
   );
-
-  runApp(const App());
 }
 
 class App extends StatelessWidget {
-  const App({Key? key}) : super(key: key);
+  final SharedPreferences prefs;
+  const App({Key? key, required this.prefs}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

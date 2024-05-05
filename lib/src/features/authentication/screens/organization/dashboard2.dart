@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -10,6 +11,7 @@ import 'package:parvaah_helping_hand/src/features/authentication/screens/organiz
 import 'package:parvaah_helping_hand/src/features/authentication/screens/organization/getupdates.dart';
 import 'package:parvaah_helping_hand/src/features/authentication/screens/organization/addupdates.dart';
 import 'package:parvaah_helping_hand/src/features/authentication/screens/organization/postevents.dart';
+import 'package:parvaah_helping_hand/src/features/authentication/screens/welcome/welcome_sc.dart';
 
 class OrganizationDashboardScreen extends StatefulWidget {
   const OrganizationDashboardScreen({Key? key}) : super(key: key);
@@ -25,11 +27,22 @@ class _OrganizationDashboardScreenState
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late PageController _pageController;
   int _currentIndex = 0;
+  String? currentUserEmail;
 
   @override
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: _currentIndex);
+    _getCurrentUserEmail();
+  }
+
+  void _getCurrentUserEmail() {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      setState(() {
+        currentUserEmail = user.email;
+      });
+    }
   }
 
   @override
@@ -67,10 +80,10 @@ class _OrganizationDashboardScreenState
                 physics: const ClampingScrollPhysics(),
                 children: [
                   OrgDashScreenContent(
-                    pageController: _pageController,
-                    onJumpToUpdates: _jumpToUpdates,
-                    onJumpToEvents: _jumpToEvents,
-                  ),
+                      pageController: _pageController,
+                      onJumpToUpdates: _jumpToUpdates,
+                      onJumpToEvents: _jumpToEvents,
+                      currentUserEmail: currentUserEmail ?? ''),
                   const PostEvents(),
                   const Getupdates(),
                 ],
@@ -153,8 +166,13 @@ class _OrganizationDashboardScreenState
               ),
               TextButton(
                 onPressed: () {
-                  // Perform logout action here
-                  Navigator.of(context).pop(true);
+                  // Navigate to WelcomeScreen
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    WelcomeScreen.routeName,
+                    (route) =>
+                        false, // This prevents going back to the previous screen
+                  );
                 },
                 child: const Text('Yes'),
               ),
@@ -191,12 +209,14 @@ class OrgDashScreenContent extends StatelessWidget {
   final PageController pageController;
   final VoidCallback onJumpToUpdates;
   final VoidCallback onJumpToEvents;
+  final String currentUserEmail; // Add currentUserEmail property
 
   const OrgDashScreenContent({
     Key? key,
     required this.pageController,
     required this.onJumpToUpdates,
     required this.onJumpToEvents,
+    required this.currentUserEmail, // Initialize currentUserEmail
   }) : super(key: key);
 
   @override
@@ -279,19 +299,27 @@ class OrgDashScreenContent extends StatelessWidget {
           StreamBuilder(
             stream: FirebaseFirestore.instance.collection('posts').snapshots(),
             builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              // Filter posts based on the current user's email
+              List<DocumentSnapshot> filteredPosts = [];
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const CircularProgressIndicator();
               }
               if (snapshot.hasError) {
                 return const Text('Something went wrong');
               }
+              // Iterate through all posts and filter based on currentUserEmail
+              snapshot.data!.docs.forEach((post) {
+                if (post['postedBy'] == currentUserEmail) {
+                  filteredPosts.add(post);
+                }
+              });
+              // Return ListView.builder with filteredPosts
               return ListView.builder(
                 shrinkWrap: true,
                 reverse: true,
-                itemCount: snapshot.data!.docs.length,
+                itemCount: filteredPosts.length,
                 itemBuilder: (context, index) {
-                  var post = snapshot
-                      .data!.docs[snapshot.data!.docs.length - 1 - index];
+                  var post = filteredPosts[index];
                   return GestureDetector(
                     onTap: () {
                       Navigator.push(

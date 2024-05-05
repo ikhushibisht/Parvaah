@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
@@ -23,7 +24,18 @@ class _UpdatesState extends State<Updates> {
   TextEditingController dateController = TextEditingController();
 
   CollectionReference ref = FirebaseFirestore.instance.collection('posts');
+  CollectionReference usersRef = FirebaseFirestore.instance.collection('users');
   Uint8List? _imageBytes;
+
+  Future<String> getCurrentUserEmail() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      DocumentSnapshot userSnapshot = await usersRef.doc(user.uid).get();
+      return userSnapshot.get('email');
+    } else {
+      throw 'User not logged in!';
+    }
+  }
 
   Future<void> _showImageSourceOptions(BuildContext context) async {
     final source = await showModalBottomSheet<ImageSource>(
@@ -73,12 +85,14 @@ class _UpdatesState extends State<Updates> {
       if (_imageBytes != null) {
         // Explicitly set the document name to be the title entered by the user
         final title = titleController.text;
+        final userEmail = await getCurrentUserEmail();
         final snapshot = await ref.doc(title).set({
           'title': title,
           'subtitle': subtitleController.text,
           'causeDetails': causeDetailsController.text,
           'totalAmount': double.parse(amountController.text),
           'date': dateController.text,
+          'postedBy': userEmail,
         });
         final downloadURL = await _uploadImage(title);
         await ref.doc(title).update({'imageURL': downloadURL});
