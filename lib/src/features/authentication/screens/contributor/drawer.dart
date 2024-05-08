@@ -8,6 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:parvaah_helping_hand/src/features/authentication/screens/contributor/drawer_screens/about.dart';
+import 'package:parvaah_helping_hand/src/features/authentication/screens/contributor/drawer_screens/myactivity.dart';
 import 'package:parvaah_helping_hand/src/features/authentication/screens/contributor/drawer_screens/myprofile.dart';
 import 'package:parvaah_helping_hand/src/features/authentication/screens/contributor/drawer_screens/mysponsorship.dart';
 import 'package:parvaah_helping_hand/src/features/authentication/screens/welcome/welcome_sc.dart';
@@ -232,7 +233,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                   leading: const Icon(Icons.history),
                   title: const Text('My Activity'),
                   onTap: () {
-                    // Get.to(() => const MyActivityScreen());
+                    Get.to(() => MyActivityScreen(userId: _auth.currentUser!.uid));
                   },
                 ),
                 if (userData['userType'] ==
@@ -280,8 +281,6 @@ class _DrawerScreenState extends State<DrawerScreen> {
               ),
               TextButton(
                 onPressed: () {
-                  // Navigator.of(context)
-                  //     .popUntil(ModalRoute.withName('/welcome'));
                   Get.offUntil(
                     GetPageRoute(page: () => const WelcomeScreen()),
                     ModalRoute.withName('/welcome'),

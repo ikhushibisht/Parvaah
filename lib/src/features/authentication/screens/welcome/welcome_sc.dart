@@ -39,6 +39,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         backgroundColor: Colors.transparent,
         body: SingleChildScrollView(
           child: Container(
+            height: height,
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: AssetImage(
@@ -64,7 +65,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         image: const AssetImage(tWelcomeScreen),
                         height: height * 0.6,
                       ),
-                      const SizedBox(height: 20.0),
+                      const SizedBox(height: 5.0),
                       Column(
                         children: [
                           Text(
@@ -78,7 +79,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             ),
                             textAlign: TextAlign.center,
                           ),
-                          const SizedBox(height: 10.0),
+                          const SizedBox(height: 0.0),
                           Text(
                             tWelcomeSubtitle,
                             style: TextStyle(
@@ -92,7 +93,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 20.0),
+                      const SizedBox(height: 10.0),
                       Row(
                         children: [
                           Expanded(

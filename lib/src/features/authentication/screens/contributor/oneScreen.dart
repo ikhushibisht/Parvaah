@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:parvaah_helping_hand/src/constants/colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:parvaah_helping_hand/src/features/authentication/screens/contributor/payment.dart';
@@ -101,6 +100,15 @@ class _OneScreenState extends State<OneScreen>
     } on TickerCanceled {}
   }
 
+  void _showPaymentSuccessSnackBar() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Payment successful'),
+        duration: Duration(seconds: 2),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var mediaQuery = MediaQuery.of(context);
@@ -185,6 +193,7 @@ class _OneScreenState extends State<OneScreen>
                         ),
                         const SizedBox(height: 10),
                         Text(
+                          textAlign: TextAlign.justify,
                           causeDetails, // Use the fetched cause details
                           style: TextStyle(
                             fontSize: 16,
@@ -197,9 +206,13 @@ class _OneScreenState extends State<OneScreen>
                   ),
                   const SizedBox(height: 10),
                   ElevatedButton.icon(
-                    onPressed: () {
-                      Get.to(() => PaymentScreen(
+                    onPressed: () async {
+                      await Get.to(() => PaymentScreen(
                           postId: widget.postId, userId: widget.userId));
+                      // After payment success, show snackbar
+                      _showPaymentSuccessSnackBar();
+                      // Fetch updated data
+                      await _fetchDataFromFirestore();
                     },
                     icon: AnimatedBuilder(
                       animation: _animationController,
@@ -241,6 +254,7 @@ class _OneScreenState extends State<OneScreen>
                       color: isDarkMode ? Colors.white : tPrimaryColor,
                     ),
                   ),
+                  const SizedBox(height: 10),
                 ],
               ),
             ),

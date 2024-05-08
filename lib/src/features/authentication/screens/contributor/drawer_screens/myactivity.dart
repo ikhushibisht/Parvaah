@@ -1,71 +1,87 @@
-// import 'package:flutter/material.dart';
-// import 'package:fl_chart/fl_chart.dart'; // Import the fl_chart package for bar graph
+import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:parvaah_helping_hand/src/constants/colors.dart';
 
-// class MyActivityScreen extends StatelessWidget {
-//   const MyActivityScreen({Key? key}) : super(key: key);
+class MyActivityScreen extends StatefulWidget {
+  final String userId;
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('My Activity'),
-//       ),
-//       body: Column(
-//         children: [
-//           // Bar graph showing contributions
-//           Padding(
-//             padding: const EdgeInsets.all(8.0),
-//             child: SizedBox(
-//               height: 200,
-//               child: BarChart(
-//                 BarChartData(
-//                   // Implement your bar chart data here
-//                   // See fl_chart documentation for usage
-//                   // Example:
-//                   barGroups: [
-//                     BarChartGroupData(
-//                       x: 0,
-//                       barRods: [
-//                         BarChartRodData(color: Colors.blue, toY: 0.0),
-//                       ],
-//                     ),
-//                     BarChartGroupData(
-//                       x: 1,
-//                       barRods: [
-//                         BarChartRodData(color: Colors.green, toY: 0.0),
-//                       ],
-//                     ),
-//                     // Add more BarChartGroupData as needed
-//                   ],
-//                   titlesData: const FlTitlesData(
-//                     leftTitles: AxisTitles(
-//                         sideTitles:
-//                             SideTitles(reservedSize: 44, showTitles: true)),
-//                     bottomTitles: AxisTitles(
-//                         sideTitles:
-//                             SideTitles(reservedSize: 30, showTitles: true)),
-//                   ),
-//                 ),
-//               ),
-//             ),
-//           ),
-//           // Activity logs
-//           Expanded(
-//             child: ListView.builder(
-//               itemCount: 20,
-//               itemBuilder: (context, index) {
-//                 // Implement how you want to display each activity log
-//                 // You can use ListTile or any other widget
-//                 return ListTile(
-//                   title: Text('Activity Log $index'),
-//                   subtitle: Text('Description of activity log $index'),
-//                   // Add more details as needed
-//                 );
-//               },
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
+  const MyActivityScreen({Key? key, required this.userId}) : super(key: key);
+
+  @override
+  _MyActivityScreenState createState() => _MyActivityScreenState();
+}
+
+class _MyActivityScreenState extends State<MyActivityScreen> {
+  @override
+  Widget build(BuildContext context) {
+    var mediaQuery = MediaQuery.of(context);
+    var brightness = mediaQuery.platformBrightness;
+    final isDarkMode = brightness == Brightness.dark;
+    return Scaffold(
+      backgroundColor: isDarkMode ? tAccentColor : tDashboardBg,
+      appBar: AppBar(
+        title: Text(
+          'Sponsor a Person',
+          style: TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+            color: isDarkMode ? Colors.white : tPrimaryColor,
+          ),
+        ),
+        backgroundColor: isDarkMode ? tPrimaryColor : tBgColor,
+      ),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('payments')
+            .where('userId', isEqualTo: widget.userId)
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          final documents = snapshot.data!.docs;
+          if (documents.isEmpty) {
+            return const Center(
+              child: Text('No donations made yet.'),
+            );
+          }
+          return ListView.builder(
+            itemCount: documents.length,
+            itemBuilder: (context, index) {
+              final payment = documents[index];
+              return DonationListItem(paymentId: payment.id);
+            },
+          );
+        },
+      ),
+    );
+  }
+}
+
+class DonationListItem extends StatelessWidget {
+  final String paymentId;
+
+  const DonationListItem({Key? key, required this.paymentId}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<DocumentSnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection('posts')
+          .doc(paymentId)
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator();
+        }
+        final post = snapshot.data!;
+        return ListTile(
+          title: const Text('Donation'),
+          subtitle: Text(post['title']),
+          // You can add more details of the donation here
+          // For example: amount donated, date, etc.
+        );
+      },
+    );
+  }
+}

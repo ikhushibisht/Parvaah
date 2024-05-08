@@ -54,7 +54,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
           .doc(widget.userId)
           .get();
       setState(() {
-        userFullName = userSnapshot['fullName'];
+        userFullName = userSnapshot['email'];
       });
     } catch (e) {
       print('Error fetching user full name: $e');

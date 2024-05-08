@@ -15,12 +15,19 @@ class SponsorshipDetailsPage extends StatelessWidget {
       backgroundColor: isDarkMode ? tAccentColor : tDashboardBg,
       appBar: AppBar(
         title: Text(
-          'My sponsorships',
+          'My Sponsorships',
           style: TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.bold,
             color: isDarkMode ? Colors.white : tPrimaryColor,
           ),
+        ),
+        backgroundColor: isDarkMode ? tPrimaryColor : tBgColor,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
       ),
       body: FutureBuilder<User?>(
@@ -35,8 +42,7 @@ class SponsorshipDetailsPage extends StatelessWidget {
           return StreamBuilder(
             stream: FirebaseFirestore.instance
                 .collection('sponsorship')
-                .where('sponsored_by',
-                    isEqualTo: userSnapshot.data!.displayName ?? '')
+                .where('sponsored_by', isEqualTo: userSnapshot.data!.uid)
                 .snapshots(),
             builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -46,28 +52,27 @@ class SponsorshipDetailsPage extends StatelessWidget {
                 return Center(child: Text('Error: ${snapshot.error}'));
               }
               if (snapshot.data!.docs.isEmpty) {
-                return Center(child: Text('No sponsorship details found.'));
+                return Center(child: Text('No sponsored people found.'));
               }
-              // Print document data for debugging
-              snapshot.data!.docs.forEach((doc) {
-                print(doc.data());
-              });
               return ListView(
                 children: snapshot.data!.docs.map((DocumentSnapshot document) {
                   Map<String, dynamic> data =
                       document.data() as Map<String, dynamic>;
-                  // Print data for debugging
-                  print('Name: ${data['name']}');
-                  return Card(
-                    margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                    child: ListTile(
-                      title: Text(
-                        data['name'] ?? '',
-                        style: TextStyle(
-                            color: isDarkMode ? Colors.white : Colors.black),
+                  return ListTile(
+                    title: Text(
+                      data['name'] ?? 'Name not available',
+                      style: TextStyle(
+                        color: isDarkMode ? Colors.white : Colors.black,
+                        fontWeight: FontWeight.bold,
                       ),
-                      subtitle: Text(
-                          'Age: ${data['age'] ?? ''}, Amount: ${data['amount'] ?? ''}'),
+                    ),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Age: ${data['age'] ?? 'N/A'}'),
+                        Text('Address: ${data['address'] ?? 'N/A'}'),
+                        Text('Amount: ${data['amount'] ?? 'N/A'}'),
+                      ],
                     ),
                   );
                 }).toList(),

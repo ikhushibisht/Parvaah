@@ -42,8 +42,7 @@ class _SponsorPersonScreenState extends State<SponsorPersonScreen> {
     final isDarkMode = brightness == Brightness.dark;
     return WillPopScope(
       onWillPop: () async {
-        // Handle back button press here (optional)
-        return true; // Return true to allow back navigation, false otherwise
+        return true;
       },
       child: Scaffold(
         backgroundColor: isDarkMode ? tAccentColor : tDashboardBg,
