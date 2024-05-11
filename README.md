@@ -5,11 +5,7 @@ In this era of rapid technological advancement and increasing interconnectedness
 ## Technologies
 
 * Frontend- Flutter.<br>
-<<<<<<< HEAD
 * Backend- Firebase (Email ID and Google authentication).<br>
-=======
-* Backend- Firebase(using email ID and Google authentication).<br>
->>>>>>> d18d5422cceba01bac797a75ef81938f79c5d27a
 * Payment Gateway- Razorpay.<br>
 
 The dashboard adjusts according to user roles, allowing contributors to target donations and organizations to track donation information. This combination ensures an easy-to-use stack for building platforms aimed at supporting needy people.<br>
@@ -27,8 +23,4 @@ To conclude, Parvaah - A Helping Hand means more than the classical definition o
 ![dfd](https://github.com/ikhushibisht/Parvaah/assets/139104398/067bea03-b223-4a52-9cdc-b5fe7afdb646) <br>
 
 
-<<<<<<< HEAD
 For help getting started with Flutter development, view the online documentation (https://docs.flutter.dev/), which offers tutorials, samples, guidance on mobile development, and a full API reference.
-=======
-For help getting started with Flutter development, view the [online documentation (https://docs.flutter.dev/), which offers tutorials, samples, guidance on mobile development, and a full API reference.
->>>>>>> d18d5422cceba01bac797a75ef81938f79c5d27a
