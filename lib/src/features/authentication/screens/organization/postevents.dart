@@ -97,41 +97,93 @@ class EventItem extends StatelessWidget {
           border: Border.all(color: Colors.grey),
           borderRadius: BorderRadius.circular(10.0),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+        child: Stack(
+          alignment: Alignment.topRight,
           children: [
-            Container(
-              child: Expanded(
-                child: Image.network(
-                  imageURL,
-                  fit: BoxFit.cover,
-                  width: MediaQuery.of(context).size.width,
-                ),
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.all(8.0),
-              color: Colors.black.withOpacity(0.5),
-              constraints: BoxConstraints(minHeight: 50),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Flexible(
-                    child: Text(
-                      docId,
-                      style: const TextStyle(color: Colors.white),
-                      overflow: TextOverflow.ellipsis,
-                    ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(
+                  child: Image.network(
+                    imageURL,
+                    fit: BoxFit.cover,
+                    width: MediaQuery.of(context).size.width,
                   ),
-                ],
-              ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(8.0),
+                  color: Colors.black.withOpacity(0.5),
+                  constraints: BoxConstraints(minHeight: 50),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Flexible(
+                        child: Text(
+                          docId,
+                          style: const TextStyle(color: Colors.white),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.delete),
+                        color: Colors.white,
+                        onPressed: () {
+                          _showDeleteConfirmationDialog(context, docId);
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ],
         ),
       ),
     );
   }
+
+  void _showDeleteConfirmationDialog(BuildContext context, String docId) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Delete Event'),
+          content: Text('Do you really want to delete this event?'),
+          actions: [
+            TextButton(
+              child: Text('No'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('Yes'),
+              onPressed: () {
+                FirebaseFirestore.instance
+                    .collection('Events')
+                    .doc(docId)
+                    .delete()
+                    .then((value) {
+                  Navigator.of(context).pop();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Event deleted')),
+                  );
+                }).catchError((error) {
+                  Navigator.of(context).pop();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Failed to delete event')),
+                  );
+                });
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
+
+
 
 class _CustomAppBar extends StatelessWidget {
   final bool isDarkMode;

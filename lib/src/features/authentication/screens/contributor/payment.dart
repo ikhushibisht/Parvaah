@@ -90,58 +90,59 @@ class _PaymentScreenState extends State<PaymentScreen> {
     savePaymentData(amtController.text);
   }
 
-  Future<void> savePaymentData(String amount) async {
-    try {
-      // Check if a document with the title already exists
-      DocumentReference paymentRef =
-          FirebaseFirestore.instance.collection('payments').doc(postTitle);
+ Future<void> savePaymentData(String amount) async {
+  try {
+    // Check if a document with the title already exists
+    DocumentReference paymentRef = FirebaseFirestore.instance
+        .collection('payments')
+        .doc(postTitle);
 
-      DocumentSnapshot docSnapshot = await paymentRef.get();
+    DocumentSnapshot docSnapshot = await paymentRef.get();
 
-      if (docSnapshot.exists) {
-        // If document exists, update the existing document
-        Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
+    if (docSnapshot.exists) {
+      // If document exists, update the existing document
+      Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
 
-        // Get the current collected amount
-        int currentCollectedAmount = data['collectedAmount'] ?? 0;
+      // Get the current collected amount
+      double currentCollectedAmount = data['collectedAmount'] ?? 0.0;
 
-        // Get the current user's donation amount, if any
-        int userDonationAmount = data[userFullName] ?? 0;
+      // Update the collected amount by adding the new payment amount
+      await paymentRef.update({
+        'collectedAmount': currentCollectedAmount + double.parse(amount),
+        // Store individual user donations separately without overwriting
+        '${userFullName}': double.parse(amount),
+      });
 
-        // Update the collected amount by adding the new payment amount
-        await paymentRef.update({
-          'collectedAmount': currentCollectedAmount + int.parse(amount),
-          // Store individual user donations separately without overwriting
-          '${userFullName}': userDonationAmount + int.parse(amount),
-        });
-      } else {
-        // If document doesn't exist, create a new document with the title as its ID
-        await paymentRef.set({
-          // Set the initial collected amount as the new payment amount
-          'collectedAmount': int.parse(amount),
-          // Store individual user donations separately
-          '${userFullName}': int.parse(amount),
-        });
-        // Update the collected amount in the posts collection
-        await updatePostsCollection(postTitle, double.parse(amount));
-      }
-    } catch (e) {
-      print('Error saving payment data: $e');
-    }
-  }
-
-  Future<void> updatePostsCollection(
-      String postId, double collectedAmount) async {
-    try {
       // Update the collected amount in the posts collection
-      await FirebaseFirestore.instance
-          .collection('posts')
-          .doc(postId)
-          .update({'collectedAmount': collectedAmount});
-    } catch (e) {
-      print('Error updating posts collection: $e');
+      await updatePostsCollection(postTitle, currentCollectedAmount + double.parse(amount));
+    } else {
+      // If document doesn't exist, create a new document with the title as its ID
+      await paymentRef.set({
+        // Set the initial collected amount as the new payment amount
+        'collectedAmount': double.parse(amount),
+        // Store individual user donations separately
+        '${userFullName}': double.parse(amount),
+      });
+
+      // Update the collected amount in the posts collection
+      await updatePostsCollection(postTitle, double.parse(amount));
     }
+  } catch (e) {
+    print('Error saving payment data: $e');
   }
+}
+
+Future<void> updatePostsCollection(String postId, double collectedAmount) async {
+  try {
+    // Update the collected amount in the posts collection
+    await FirebaseFirestore.instance
+        .collection('posts')
+        .doc(postId)
+        .update({'collectedAmount': collectedAmount});
+  } catch (e) {
+    print('Error updating posts collection: $e');
+  }
+}
 
   void handlePaymentError(PaymentFailureResponse response) {
     print(response.message!);

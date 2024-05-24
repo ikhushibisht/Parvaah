@@ -347,23 +347,36 @@ class OrgDashScreenContent extends StatelessWidget {
                           ),
                         ],
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            post['title'],
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  post['title'],
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                                const SizedBox(height: 5),
+                                Text(
+                                  post['subtitle'],
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey[600],
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          const SizedBox(height: 5),
-                          Text(
-                            post['subtitle'],
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey[600],
-                            ),
+                          IconButton(
+                            icon: Icon(Icons.delete, color: Colors.red),
+                            onPressed: () {
+                              _showDeleteDialog(context, post.id);
+                            },
                           ),
                         ],
                       ),
@@ -372,6 +385,29 @@ class OrgDashScreenContent extends StatelessWidget {
                 },
               );
             },
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showDeleteDialog(BuildContext context, String postId) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Confirm Delete'),
+        content: Text('Do you really want to delete this post?'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text('No'),
+          ),
+          TextButton(
+            onPressed: () {
+              FirebaseFirestore.instance.collection('posts').doc(postId).delete();
+              Navigator.of(context).pop(true);
+            },
+            child: Text('Yes'),
           ),
         ],
       ),

@@ -104,7 +104,7 @@ class EventCard extends StatelessWidget {
                 TableCalendar(
                   calendarBuilders: CalendarBuilders(
                     // Highlight the event date
-                    selectedBuilder: (context, date, _) {
+                    defaultBuilder: (context, date, _) {
                       if (isSameDay(date, eventDate)) {
                         return Container(
                           margin: const EdgeInsets.all(4.0),
@@ -124,10 +124,10 @@ class EventCard extends StatelessWidget {
                     },
                   ),
                   focusedDay: eventDate,
+                  selectedDayPredicate: (date) => isSameDay(date, eventDate),
                   firstDay: DateTime.utc(2022, 1, 1),
                   lastDay: DateTime.utc(2030, 12, 31),
-                  availableGestures:
-                      AvailableGestures.none, // Make non-interactive
+                  availableGestures: AvailableGestures.none, // Make non-interactive
                 ),
                 const SizedBox(height: 8),
                 StreamBuilder<DocumentSnapshot>(
@@ -142,8 +142,7 @@ class EventCard extends StatelessWidget {
                     if (!snapshot.hasData) {
                       return const Text('No data available');
                     }
-                    var eventData =
-                        snapshot.data!.data() as Map<String, dynamic>;
+                    var eventData = snapshot.data!.data() as Map<String, dynamic>;
                     var venue = eventData['venue'];
                     var time = eventData['time'];
                     if (venue == null || time == null) {
@@ -152,7 +151,7 @@ class EventCard extends StatelessWidget {
                     return Container(
                       width: double.infinity,
                       padding: const EdgeInsets.all(14),
-                      color: Color.fromARGB(255, 197, 196, 197),
+                      color: const Color.fromARGB(255, 197, 196, 197),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
@@ -162,9 +161,7 @@ class EventCard extends StatelessWidget {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          Text(
-                            'Time: $time',
-                          ),
+                          Text('Time: $time'),
                         ],
                       ),
                     );
